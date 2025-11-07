@@ -8,28 +8,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* About Section */}
           <div>
-            <h3 className="font-headline text-lg font-bold">About</h3>
-            <p className="mt-4 text-sm text-secondary-foreground/80">
-              ApnaDairy delivers farm-fresh dairy products right to your doorstep, ensuring quality and purity for your family.
-            </p>
-            <div className="mt-4 flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
                 <Milk className="h-7 w-7 text-primary" />
                 <span className="font-headline text-xl font-bold">ApnaDairy</span>
             </div>
-            <div className="mt-6 flex space-x-4">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
-                <Facebook className="h-6 w-6" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
-                <Instagram className="h-6 w-6" />
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
-                <Youtube className="h-6 w-6" />
-                <span className="sr-only">YouTube</span>
-              </Link>
-            </div>
+            <p className="mt-4 text-sm text-secondary-foreground/80">
+              ApnaDairy delivers farm-fresh dairy products right to your doorstep, ensuring quality and purity for your family.
+            </p>
           </div>
 
           {/* Services Section */}
@@ -73,9 +58,27 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 border-t border-secondary-foreground/20 pt-6 text-center text-sm text-secondary-foreground/80">
-          <p>&copy; {new Date().getFullYear()} ApnaDairy Online. All rights reserved.</p>
+
+        <div className="mt-12 border-t border-secondary-foreground/20 pt-8">
+            <div className="flex justify-center space-x-6">
+              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Facebook className="h-6 w-6" />
+                <span className="sr-only">Facebook</span>
+              </Link>
+              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Instagram className="h-6 w-6" />
+                <span className="sr-only">Instagram</span>
+              </Link>
+              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Youtube className="h-6 w-6" />
+                <span className="sr-only">YouTube</span>
+              </Link>
+            </div>
+            <div className="mt-8 text-center text-sm text-secondary-foreground/80">
+              <p>&copy; {new Date().getFullYear()} ApnaDairy Online. All rights reserved.</p>
+            </div>
         </div>
+
       </div>
     </footer>
   );
