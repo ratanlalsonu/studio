@@ -49,7 +49,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center">
                 <Mail className="mr-3 h-4 w-4 text-primary" />
-                <a href="mailto:support@apnadairy.com" className="text-secondary-foreground/80 hover:text-primary">support@apnadairy.com</a>
+                <a href="mailto:apnadairy@gmail.com" className="text-secondary-foreground/80 hover:text-primary">apnadairy@gmail.com</a>
               </li>
               <li className="flex items-center">
                 <Phone className="mr-3 h-4 w-4 text-primary" />
