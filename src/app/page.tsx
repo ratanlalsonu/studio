@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { products } from '@/lib/data';
 import Link from 'next/link';
 import ProductCard from '@/components/product-card';
+import { Leaf, Award, Truck } from 'lucide-react';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero');
@@ -39,30 +39,57 @@ export default function Home() {
       </section>
 
       {/* Introduction Section */}
-      <section className="relative bg-card py-16">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 -translate-y-1/2 z-10"
-        >
-          <Image
-            src="https://i.imgur.com/tuqGXw1.png"
-            alt="Milk splash"
-            width={1920}
-            height={200}
-            className="w-full object-cover"
-          />
+      <section className="bg-background py-16 text-center">
+        <div className="container mx-auto px-4">
+            <h2 className="font-headline text-3xl font-bold text-foreground">
+              The Taste of Purity, Delivered
+            </h2>
+            <p className="mx-auto mt-4 max-w-3xl text-muted-foreground">
+              At ApnaDairy, we bring you the finest quality dairy products, sourced directly from local farms. Experience the difference with our range of milk, ghee, paneer, and more.
+            </p>
         </div>
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-headline text-3xl font-bold text-foreground">
-            Pure, Natural, and Fresh
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="bg-secondary py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="mb-12 text-center font-headline text-3xl font-bold">
+            Why Choose ApnaDairy?
           </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-muted-foreground">
-            At ApnaDairy, we bring you the finest quality dairy products, sourced directly from local farms. Experience the taste of purity with our range of milk, ghee, paneer, and more.
-          </p>
+          <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-3">
+            <div className="flex flex-col items-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Leaf className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold">Farm-Fresh Quality</h3>
+              <p className="mt-2 text-muted-foreground">
+                Sourced directly from local farms to ensure you get the freshest products every day.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Award className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold">Hygienic & Pure</h3>
+              <p className="mt-2 text-muted-foreground">
+                Processed and packaged with the highest standards of hygiene for your family's safety.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Truck className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold">Reliable Delivery</h3>
+              <p className="mt-2 text-muted-foreground">
+                Get your daily dose of freshness delivered right to your doorstep, on time.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-8 text-center font-headline text-3xl font-bold">
             Our Popular Products
