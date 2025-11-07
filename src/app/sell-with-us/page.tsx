@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -115,7 +116,17 @@ export default function SellerPage() {
               </div>
                <div className="grid gap-2">
                   <Label htmlFor="sellerPhone">Contact Phone</Label>
-                  <Input id="sellerPhone" type="tel" placeholder="+91 12345 67890" required onChange={handleInputChange} value={formState.sellerPhone} />
+                  <Input 
+                    id="sellerPhone" 
+                    type="tel" 
+                    placeholder="1234567890" 
+                    required 
+                    onChange={handleInputChange} 
+                    value={formState.sellerPhone}
+                    pattern="[0-9]{10}"
+                    maxLength={10}
+                    title="Please enter a 10-digit phone number"
+                  />
                 </div>
               <div className="grid gap-2">
                 <Label htmlFor="productName">Product Name</Label>
@@ -141,7 +152,7 @@ export default function SellerPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="price">Price (per Litre/Kg)</Label>
-                    <Input id="price" type="number" placeholder="e.g., 650" required onChange={handleInputChange} value={formState.price}/>
+                    <Input id="price" type="number" placeholder="e.g., 650" required onChange={handleInputChange} value={formState.price} min="0"/>
                 </div>
               </div>
               <div className="grid gap-2">

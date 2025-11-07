@@ -90,6 +90,7 @@ export default function QueryPage() {
                     required 
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    minLength={10}
                   />
                 </div>
               </div>
