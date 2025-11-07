@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { UploadCloud, Handshake } from 'lucide-react';
+import { UploadCloud, Handshake, FileIcon, X } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,11 +36,12 @@ export default function SellerPage() {
   const [formState, setFormState] = useState({
     sellerName: '',
     sellerContact: '',
+    sellerPhone: '',
     productName: '',
     productCategory: '',
     productDescription: '',
     price: '',
-    image: null,
+    image: null as File | null,
   });
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -52,6 +53,18 @@ export default function SellerPage() {
   const handleCategoryChange = (value: string) => {
     setFormState(prevState => ({ ...prevState, productCategory: value }));
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormState(prevState => ({ ...prevState, image: e.target.files![0] }));
+    }
+  };
+
+  const removeImage = () => {
+    setFormState(prevState => ({ ...prevState, image: null }));
+    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
+    if(fileInput) fileInput.value = '';
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,12 +79,15 @@ export default function SellerPage() {
     setFormState({
         sellerName: '',
         sellerContact: '',
+        sellerPhone: '',
         productName: '',
         productCategory: '',
         productDescription: '',
         price: '',
         image: null,
     });
+    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
+    if(fileInput) fileInput.value = '';
   };
 
   return (
@@ -97,6 +113,10 @@ export default function SellerPage() {
                   <Input id="sellerContact" type="email" placeholder="john@example.com" required onChange={handleInputChange} value={formState.sellerContact}/>
                 </div>
               </div>
+               <div className="grid gap-2">
+                  <Label htmlFor="sellerPhone">Contact Phone</Label>
+                  <Input id="sellerPhone" type="tel" placeholder="+91 12345 67890" required onChange={handleInputChange} value={formState.sellerPhone} />
+                </div>
               <div className="grid gap-2">
                 <Label htmlFor="productName">Product Name</Label>
                 <Input id="productName" placeholder="e.g., Fresh Organic A2 Ghee" required onChange={handleInputChange} value={formState.productName}/>
@@ -113,7 +133,9 @@ export default function SellerPage() {
                             <SelectItem value="ghee">Ghee</SelectItem>
                             <SelectItem value="paneer">Paneer</SelectItem>
                             <SelectItem value="curd">Curd</SelectItem>
-                             <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="khoya">Khoya</SelectItem>
+                            <SelectItem value="chhena">Chhena</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -128,16 +150,28 @@ export default function SellerPage() {
               </div>
                <div className="grid gap-2">
                  <Label htmlFor="image">Product Image</Label>
-                 <div className="flex items-center justify-center w-full">
-                    <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-accent">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
-                            <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p className="text-xs text-muted-foreground">PNG, JPG, or GIF (MAX. 800x400px)</p>
-                        </div>
-                        <Input id="image-upload" type="file" className="hidden" />
-                    </label>
-                </div> 
+                  {formState.image ? (
+                    <div className="flex items-center justify-between rounded-lg border bg-muted p-2">
+                      <div className="flex items-center gap-2">
+                        <FileIcon className="h-6 w-6 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">{formState.image.name}</span>
+                      </div>
+                      <Button type="button" variant="ghost" size="icon" onClick={removeImage}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center w-full">
+                        <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-accent">
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
+                                <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p className="text-xs text-muted-foreground">PNG, JPG, or GIF (MAX. 800x400px)</p>
+                            </div>
+                            <Input id="image-upload" type="file" className="hidden" onChange={handleImageChange} accept="image/png, image/jpeg, image/gif"/>
+                        </label>
+                    </div> 
+                  )}
               </div>
             </CardContent>
             <CardFooter>
