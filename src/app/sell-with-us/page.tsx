@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from '@/lib/utils';
 
 
 export default function SellerPage() {
@@ -90,6 +91,10 @@ export default function SellerPage() {
     const fileInput = document.getElementById('image-upload') as HTMLInputElement;
     if(fileInput) fileInput.value = '';
   };
+  
+  const isFormValid = useMemo(() => {
+    return Object.values(formState).every(value => value !== '' && value !== null);
+  }, [formState]);
 
   return (
     <>
@@ -186,7 +191,7 @@ export default function SellerPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" size="lg" className="w-full">
+              <Button type="submit" size="lg" className="w-full" disabled={!isFormValid}>
                 Submit for Review
               </Button>
             </CardFooter>

@@ -22,10 +22,10 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-lg font-bold">Services</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/products" className="text-secondary-foreground/80 hover:text-primary">All Products</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary">Subscription Plans</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary">Bulk Orders</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary">Home Delivery</Link></li>
+              <li><Link href="/products" className="text-secondary-foreground/80 hover:text-primary transition-colors">All Products</Link></li>
+              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Subscription Plans</Link></li>
+              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Bulk Orders</Link></li>
+              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Home Delivery</Link></li>
             </ul>
           </div>
 
@@ -33,10 +33,10 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-lg font-bold">Links</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/orders" className="text-secondary-foreground/80 hover:text-primary">My Orders</Link></li>
-              <li><Link href="/cart" className="text-secondary-foreground/80 hover:text-primary">My Cart</Link></li>
-              <li><Link href="/login" className="text-secondary-foreground/80 hover:text-primary">Login</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary">FAQs</Link></li>
+              <li><Link href="/orders" className="text-secondary-foreground/80 hover:text-primary transition-colors">My Orders</Link></li>
+              <li><Link href="/cart" className="text-secondary-foreground/80 hover:text-primary transition-colors">My Cart</Link></li>
+              <li><Link href="/login" className="text-secondary-foreground/80 hover:text-primary transition-colors">Login</Link></li>
+              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">FAQs</Link></li>
             </ul>
           </div>
 
@@ -50,11 +50,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center">
                 <Mail className="mr-3 h-4 w-4 text-primary" />
-                <a href="mailto:apnadairy@gmail.com" className="text-secondary-foreground/80 hover:text-primary">apnadairy@gmail.com</a>
+                <a href="mailto:apnadairy@gmail.com" className="text-secondary-foreground/80 hover:text-primary transition-colors">apnadairy@gmail.com</a>
               </li>
               <li className="flex items-center">
                 <Phone className="mr-3 h-4 w-4 text-primary" />
-                 <a href="tel:+919696282959" className="text-secondary-foreground/80 hover:text-primary">+91 9696282959</a>
+                 <a href="tel:+919696282959" className="text-secondary-foreground/80 hover:text-primary transition-colors">+91 9696282959</a>
               </li>
             </ul>
           </div>
@@ -62,15 +62,15 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-secondary-foreground/20 pt-8">
             <div className="flex justify-center space-x-6">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Facebook className="h-6 w-6" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Youtube className="h-6 w-6" />
                 <span className="sr-only">YouTube</span>
               </Link>

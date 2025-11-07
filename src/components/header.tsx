@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -82,7 +83,7 @@ export default function Header() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-[#1e2a60] hover:bg-[#1e2a60]/90")}
+          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-[#1e2a60] hover:bg-[#1e2a60]/90 transition-colors")}
         >
           {item.label}
         </Link>
@@ -109,7 +110,7 @@ export default function Header() {
             <Link
                 key={item.href}
                 href={item.href}
-                className={cn(buttonVariants({ variant: 'secondary' }), "w-full justify-start text-lg")}
+                className={cn(buttonVariants({ variant: 'secondary' }), "w-full justify-start text-lg transition-colors")}
             >
                 {item.label}
             </Link>
@@ -138,7 +139,7 @@ export default function Header() {
         
         <div className="flex items-center space-x-2 sm:space-x-4">
           {!isMobile && <SearchBar />}
-          <Button asChild variant="ghost" size="icon">
+          <Button asChild variant="ghost" size="icon" className="transition-colors">
             <Link href="/cart">
               <ShoppingCart />
               {cartCount > 0 && (
@@ -149,7 +150,7 @@ export default function Header() {
               <span className="sr-only">Shopping Cart</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="transition-colors">
             <Link href="/login">Login</Link>
           </Button>
           <Button asChild size="sm" className="transition-transform duration-200 hover:scale-105">
