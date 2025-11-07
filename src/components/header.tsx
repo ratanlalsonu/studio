@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 
 const navItems = [
@@ -27,6 +28,7 @@ export default function Header() {
   const { cartCount } = useCart();
   const isMobile = useIsMobile();
   const [showSearch, setShowSearch] = useState(false);
+  const { toast } = useToast();
 
   const SearchBar = () => {
     const router = useRouter();
@@ -36,7 +38,11 @@ export default function Header() {
     const handleSearch = (e: React.FormEvent) => {
       e.preventDefault();
       if (!query.trim()) {
-        router.push('/products');
+        toast({
+            title: "Search is empty",
+            description: "Please enter a product name to search.",
+            variant: "destructive"
+        })
       } else {
         router.push(`/products?q=${encodeURIComponent(query)}`);
       }
@@ -74,7 +80,8 @@ export default function Header() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }))}
+          className={cn(buttonVariants({ size: 'sm' }), "text-white")}
+          style={{backgroundColor: '#1e2a60'}}
         >
           {item.label}
         </Link>
