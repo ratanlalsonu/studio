@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { Package, Receipt } from 'lucide-react';
 
 export default function OrdersPage() {
+  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
+
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="mb-8 text-center font-headline text-4xl font-bold">My Orders</h1>
@@ -42,14 +44,14 @@ export default function OrdersPage() {
                 {order.items.map(item => (
                   <li key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                     <span>{item.name} <span className="text-muted-foreground">x {item.quantity} {item.unit}</span></span>
-                    <span>&#8377;{(item.price * item.quantity).toFixed(2)}</span>
+                    <span>{formatPrice(item.price * item.quantity)}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
             <Separator />
             <CardFooter className="flex flex-col items-start gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="font-semibold">Total: &#8377;{order.total.toFixed(2)}</p>
+                <p className="font-semibold">Total: {formatPrice(order.total)}</p>
               <Button asChild>
                 <Link href={`/orders/${order.id}`}>
                   <Package className="mr-2 h-4 w-4" /> Track Order

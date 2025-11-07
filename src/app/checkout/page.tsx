@@ -28,6 +28,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const router = useRouter();
   const { toast } = useToast();
+  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
 
   if (cartItems.length === 0) {
     // Redirect to home or products if cart is empty
@@ -91,14 +92,14 @@ export default function CheckoutPage() {
                 {cartItems.map(item => (
                   <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                     <span className="flex-grow truncate pr-2">{item.name} ({item.quantity} {item.unit})</span>
-                    <span className="flex-shrink-0">&#8377;{(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="flex-shrink-0">{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
               <Separator className="my-4" />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span>&#8377;{totalPrice.toFixed(2)}</span>
+                <span>{formatPrice(totalPrice)}</span>
               </div>
               
               <AlertDialog>
@@ -109,7 +110,7 @@ export default function CheckoutPage() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Confirm Your Order</AlertDialogTitle>
                     <AlertDialogDescription>
-                      You are about to place an order with a total of &#8377;{totalPrice.toFixed(2)}. Are you sure you want to proceed?
+                      You are about to place an order with a total of {formatPrice(totalPrice)}. Are you sure you want to proceed?
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

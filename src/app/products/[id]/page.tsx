@@ -56,7 +56,7 @@ function ProductDisplay({ product }: { product: Product }) {
     } else if (unit === 'ml' || unit === 'g') {
       pricePerSelectedUnit = product.pricePerUnit / 1000;
     }
-    return (pricePerSelectedUnit * quantity).toFixed(2);
+    return (pricePerSelectedUnit * quantity);
   }
 
   return (
@@ -108,7 +108,7 @@ function ProductDisplay({ product }: { product: Product }) {
             
             <div className="mt-6">
                 <p className="text-2xl font-bold text-primary">
-                    Total Price: &#8377;{getPrice()}
+                    Total Price: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(getPrice())}
                 </p>
             </div>
             

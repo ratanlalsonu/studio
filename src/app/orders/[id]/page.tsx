@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 
 export default function OrderDetailPage({ params }: { params: { id: string } }) {
   const order = orders.find((o) => o.id === params.id);
+  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
 
   if (!order) {
     notFound();
@@ -64,14 +65,14 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
                 {order.items.map(item => (
                   <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                     <span>{item.name} x {item.quantity}</span>
-                    <span>&#8377;{(item.price * item.quantity).toFixed(2)}</span>
+                    <span>{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
               <Separator className="my-4" />
               <div className="flex justify-between font-semibold">
                 <span>Total</span>
-                <span>&#8377;{order.total.toFixed(2)}</span>
+                <span>{formatPrice(order.total)}</span>
               </div>
             </CardContent>
           </Card>
