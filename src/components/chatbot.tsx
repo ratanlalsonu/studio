@@ -79,7 +79,7 @@ const qaMap = [
   { keywords: ["lactose free milk", "lactose", "lactose intolerance"], answer: "Lactose-free milk is available only on advance order. How else can I help you?" },
 ];
 
-const defaultAnswer = "Please contact us at 1234567891. How else can I help you?";
+const defaultAnswer = "Please contact us at 9696282959. How else can I help you?";
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
