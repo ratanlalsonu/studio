@@ -9,7 +9,7 @@
     {
       "id": "milk",
       "description": "A traditional Indian steel container filled with fresh milk.",
-      "imageUrl": "http://5.imimg.com/data5/SELLER/Default/2022/11/WD/NC/VW/15933885/fresh-cow-milk-500x500.webp",
+      "imageUrl": "https://images.unsplash.com/photo-1598154881518-5a8286395b0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxpbmRpYW4lMjBtaWxrJTIwY29udGFpbmVyfGVufDB8fHx8MTc2MjY5NzUwMnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian milk"
     },
     {
@@ -21,7 +21,7 @@
     {
       "id": "ghee",
       "description": "A jar of golden desi ghee with a wooden spoon.",
-      "imageUrl": "https://picsum.photos/seed/ghee/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1606132789118-f044949553f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnaGVlfGVufDB8fHx8MTc2MjY5NzYxNnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "desi ghee"
     },
     {
