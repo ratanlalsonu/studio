@@ -14,6 +14,15 @@ export const products: Product[] = [
     image: getImageUrl('milk'),
   },
   {
+    id: 'buffalo-milk',
+    name: 'Fresh Buffalo Milk',
+    description: 'Creamy and rich buffalo milk, known for its higher fat content. Excellent for making traditional sweets and thick yogurt.',
+    pricePerUnit: 65, // Price per litre
+    units: ['litre', 'ml'],
+    defaultUnit: 'litre',
+    image: getImageUrl('buffalo-milk'),
+  },
+  {
     id: 'ghee',
     name: 'Pure Desi Ghee',
     description: 'Aromatic and granular ghee made from traditional methods. Adds a rich flavor to your dishes.',

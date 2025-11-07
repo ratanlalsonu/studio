@@ -13,6 +13,12 @@
       "imageHint": "milk bottle"
     },
     {
+      "id": "buffalo-milk",
+      "description": "A glass of rich buffalo milk.",
+      "imageUrl": "https://images.unsplash.com/photo-1620189423984-a1353a2a6b47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtaWxrJTIwZ2xhc3N8ZW58MHx8fHwxNzYyNTEyMTk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "milk glass"
+    },
+    {
       "id": "ghee",
       "description": "A jar of golden ghee.",
       "imageUrl": "https://images.unsplash.com/photo-1543463573-35e4afd0ab43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnaGVlJTIwamFyfGVufDB8fHx8MTc2MjUwMDIyNXww&ixlib=rb-4.1.0&q=80&w=1080",

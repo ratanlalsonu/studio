@@ -8,7 +8,7 @@ import { Leaf, Award, Truck } from 'lucide-react';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero');
-  const featuredProducts = products.slice(0, 3);
+  const featuredProducts = products.slice(0, 4);
 
   return (
     <div className="flex flex-col">
@@ -94,7 +94,7 @@ export default function Home() {
           <h2 className="mb-8 text-center font-headline text-3xl font-bold">
             Our Popular Products
           </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
