@@ -1,12 +1,17 @@
 
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Milk } from 'lucide-react';
+import { Milk, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="flex min-h-[80vh] items-center justify-center bg-background">
       <Card className="mx-auto w-full max-w-sm">
@@ -33,7 +38,24 @@ export default function LoginPage() {
                   Forgot your password?
                 </Link>
               </div>
-              <Input id="password" type="password" required minLength={6} />
+              <div className="relative">
+                <Input 
+                  id="password" 
+                  type={showPassword ? 'text' : 'password'} 
+                  required 
+                  minLength={6} 
+                />
+                <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                  onClick={() => setShowPassword(prev => !prev)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+                </Button>
+              </div>
             </div>
             <Button type="submit" className="w-full">
               Login

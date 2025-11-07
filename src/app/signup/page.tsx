@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Milk } from 'lucide-react';
+import { Milk, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
@@ -22,6 +22,8 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -80,27 +82,51 @@ export default function SignupPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                required 
-                minLength={8}
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input 
+                  id="password" 
+                  type={showPassword ? 'text' : 'password'} 
+                  required 
+                  minLength={8}
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                  onClick={() => setShowPassword(prev => !prev)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+                </Button>
+              </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input 
-                id="confirm-password" 
-                type="password" 
-                required 
-                minLength={8}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+               <div className="relative">
+                <Input 
+                  id="confirm-password" 
+                  type={showConfirmPassword ? 'text' : 'password'} 
+                  required 
+                  minLength={8}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                 <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                  onClick={() => setShowConfirmPassword(prev => !prev)}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <span className="sr-only">{showConfirmPassword ? 'Hide password' : 'Show password'}</span>
+                </Button>
+              </div>
             </div>
             <Button type="submit" className="w-full">
               Create an account
