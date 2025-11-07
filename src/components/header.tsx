@@ -93,7 +93,7 @@ export default function Header() {
         <div className="flex flex-col space-y-4 p-4">
         <Link href="/" className="flex items-center space-x-2">
             <Milk className="h-8 w-8 text-primary" />
-            <span className="font-headline text-2xl font-bold">ApnaDairy</span>
+            <span className="font-logo text-3xl">ApnaDairy</span>
         </Link>
         <nav className="flex flex-col space-y-2">
             {navItems.map((item) => (
@@ -117,7 +117,7 @@ export default function Header() {
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
             <Milk className="h-7 w-7 text-primary" />
-            <span className="hidden font-headline text-xl font-bold sm:inline-block">
+            <span className="hidden font-logo text-2xl sm:inline-block">
               ApnaDairy
             </span>
           </Link>
