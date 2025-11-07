@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "A farmer with a cow and a buffalo in a field at sunrise.",
+      "imageUrl": "https://images.unsplash.com/photo-1555230130-c8476b507b98?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYXJtZXIlMjBjYXR0bGV8ZW58MHx8fHwxNzYyNTAwMjI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "farmer cattle"
+    },
+    {
+      "id": "milk",
+      "description": "A glass bottle of fresh milk.",
+      "imageUrl": "https://images.unsplash.com/photo-1608634960479-c70cf0c3dece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtaWxrJTIwYm90dGxlfGVufDB8fHx8MTc2MjQ2MTM0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "milk bottle"
+    },
+    {
+      "id": "ghee",
+      "description": "A jar of golden ghee.",
+      "imageUrl": "https://images.unsplash.com/photo-1543463573-35e4afd0ab43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnaGVlJTIwamFyfGVufDB8fHx8MTc2MjUwMDIyNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ghee jar"
+    },
+    {
+      "id": "paneer",
+      "description": "A block of fresh paneer.",
+      "imageUrl": "https://images.unsplash.com/photo-1690401769082-5f475f87fb22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwYW5lZXIlMjBjaGVlc2V8ZW58MHx8fHwxNzYyNTAwMjI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "paneer cheese"
+    },
+    {
+      "id": "khoya",
+      "description": "A bowl of rich khoya.",
+      "imageUrl": "https://images.unsplash.com/photo-1553301803-768cd4a59b9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxraG95YSUyMG1pbGt8ZW58MHx8fHwxNzYyNTAwMjI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "khoya milk"
+    },
+    {
+      "id": "chhena",
+      "description": "Soft, freshly made chhena.",
+      "imageUrl": "https://images.unsplash.com/photo-1669908978664-485e69bc26cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGhlbmElMjBjaGVlc2V8ZW58MHx8fHwxNzYyNTAwMjI1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chhena cheese"
+    },
+    {
+      "id": "curd",
+      "description": "A bowl of thick, creamy curd.",
+      "imageUrl": "https://images.unsplash.com/photo-1633383718081-22ac93e3db65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjdXJkJTIweW9ndXJ0fGVufDB8fHx8MTc2MjUwMDIyNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "curd yogurt"
+    }
+  ]
 }
