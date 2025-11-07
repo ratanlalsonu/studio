@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Milk, Phone, Mail, MapPin } from 'lucide-react';
+import { Milk, Phone, Mail, MapPin, Instagram, Youtube, Facebook } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -15,6 +15,20 @@ export default function Footer() {
             <div className="mt-4 flex items-center space-x-2">
                 <Milk className="h-7 w-7 text-primary" />
                 <span className="font-headline text-xl font-bold">ApnaDairy</span>
+            </div>
+            <div className="mt-6 flex space-x-4">
+              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Facebook className="h-6 w-6" />
+                <span className="sr-only">Facebook</span>
+              </Link>
+              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Instagram className="h-6 w-6" />
+                <span className="sr-only">Instagram</span>
+              </Link>
+              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary">
+                <Youtube className="h-6 w-6" />
+                <span className="sr-only">YouTube</span>
+              </Link>
             </div>
           </div>
 
