@@ -80,8 +80,7 @@ export default function Header() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(buttonVariants({ size: 'sm' }), "text-white")}
-          style={{backgroundColor: '#1e2a60'}}
+          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-secondary hover:bg-secondary/90")}
         >
           {item.label}
         </Link>
