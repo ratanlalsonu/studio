@@ -62,18 +62,18 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-secondary-foreground/20 pt-8">
             <div className="flex justify-center space-x-6">
-              <Link href="https://facebook.com/your-profile" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              <div className="text-secondary-foreground/80">
                 <Facebook className="h-6 w-6" />
                 <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="https://www.instagram.com/accounts/login/" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              </div>
+              <div className="text-secondary-foreground/80">
                 <Instagram className="h-6 w-6" />
                 <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="https://youtube.com/your-channel" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              </div>
+              <div className="text-secondary-foreground/80">
                 <Youtube className="h-6 w-6" />
                 <span className="sr-only">YouTube</span>
-              </Link>
+              </div>
             </div>
             <div className="mt-8 text-center text-sm text-secondary-foreground/80">
               <p>&copy; {new Date().getFullYear()} ApnaDairy Online. All rights reserved.</p>
