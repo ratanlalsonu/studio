@@ -3,49 +3,49 @@
     {
       "id": "hero",
       "description": "A woman in a sari milking a cow in a rural Indian setting.",
-      "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSZz6GSWVBWD8_Wp3z5Slt0uWKYadZMkICqHPBqKIdm5FaK3bEn",
+      "imageUrl": "https://www.thefrozengarden.com/cdn/shop/articles/benefits-of-whole-milk-benefits-of-drinking-whole-milk-blog-frozen-garden_e991a019-eebb-455b-99b2-96041863f037.webp?v=1706546802&width=1500",
       "imageHint": "indian dairy"
     },
     {
       "id": "milk",
       "description": "A traditional Indian steel container filled with fresh milk.",
-      "imageUrl": "https://images.unsplash.com/photo-1559590449-564a7f93a2_e?q=80&w=1887&auto=format&fit=crop",
+      "imageUrl": "https://media.istockphoto.com/id/535489242/photo/pouring-milk-in-the-glass-on-the-background-of-nature.jpg?s=612x612&w=0&k=20&c=bqBubtMFs_kv9z0OZVLunl3NFTb_XAVKiw8v1hO1T80=",
       "imageHint": "indian milk"
     },
     {
       "id": "buffalo-milk",
       "description": "A glass of rich milk next to a traditional Indian milk can.",
-      "imageUrl": "https://images.unsplash.com/photo-1628042401669-f8c621b18a1d?q=80&w=1887&auto=format&fit=crop",
+      "imageUrl": "https://img.freepik.com/free-photo/pitcher-with-some-milk_93675-128649.jpg?semt=ais_hybrid&w=740&q=80",
       "imageHint": "milk container"
     },
     {
       "id": "ghee",
       "description": "A jar of golden desi ghee with a wooden spoon.",
-      "imageUrl": "https://images.unsplash.com/photo-1606884639945_e8a4a5b4816c?q=80&w=1965&auto=format&fit=crop",
+      "imageUrl": "https://t3.ftcdn.net/jpg/14/38/02/02/360_F_1438020262_6XBwH74PjQ6QLaDUiTZ90dSMfyIjoGUK.jpg",
       "imageHint": "desi ghee"
     },
     {
       "id": "paneer",
       "description": "Cubes of fresh paneer on a wooden board with spices.",
-      "imageUrl": "https://images.unsplash.com/photo-1626501237385-0154e19b9356?q=80&w=1964&auto=format&fit=crop",
+      "imageUrl": "https://img.freepik.com/premium-photo/paneer-isolated-white-background_759447-1790.jpg",
       "imageHint": "indian paneer"
     },
     {
       "id": "khoya",
       "description": "Khoya (mawa) being prepared in a traditional Indian kadhai.",
-      "imageUrl": "https://images.unsplash.com/photo-1598103442349-74436915089c?q=80&w=1887&auto=format&fit=crop",
+      "imageUrl": "https://img.freepik.com/premium-photo/khoa-khua-khoya-mawa-is-dairy-food-originating-from-indian-subcontinent-widely-used-cuisines-indian-subcontinent_466689-69599.jpg",
       "imageHint": "indian sweet"
     },
     {
       "id": "chhena",
       "description": "Freshly made chhena for making Indian sweets like rasgulla.",
-      "imageUrl": "https://plus.unsplash.com/premium_photo-1694344331393-2066d548f76d?q=80&w=1887&auto=format&fit=crop",
+      "imageUrl": "https://www.shutterstock.com/image-photo/indian-rasgulla-dry-rosogulla-dessertsweet-600nw-1849158193.jpg",
       "imageHint": "indian sweets"
     },
     {
       "id": "curd",
       "description": "A traditional earthen pot (matka) filled with creamy curd.",
-      "imageUrl": "https://images.unsplash.com/photo-15621194add_7a8b6694c41?q=80&w=1935&auto=format&fit=crop",
+      "imageUrl": "https://tiimg.tistatic.com/fp/1/008/186/fresh-sweet-white-curd-658.jpg",
       "imageHint": "indian curd"
     }
   ]

@@ -62,15 +62,15 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-secondary-foreground/20 pt-8">
             <div className="flex justify-center space-x-6">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              <Link href="https://facebook.com/your-profile" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Facebook className="h-6 w-6" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              <Link href="https://instagram.com/your-profile" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
+              <Link href="https://youtube.com/your-channel" target="_blank" rel="noopener noreferrer" className="text-secondary-foreground/80 hover:text-primary transition-colors">
                 <Youtube className="h-6 w-6" />
                 <span className="sr-only">YouTube</span>
               </Link>
