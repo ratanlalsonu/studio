@@ -51,9 +51,9 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="bg-secondary py-20">
+      <section className="bg-card py-20">
         <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center font-headline text-3xl font-bold">
+          <h2 className="mb-12 text-center font-headline text-3xl font-bold text-foreground">
             Why Choose ApnaDairy?
           </h2>
           <div className="grid grid-cols-1 gap-10 text-center md:grid-cols-3">
@@ -61,7 +61,7 @@ export default function Home() {
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Leaf className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-semibold">Farm-Fresh Quality</h3>
+              <h3 className="text-xl font-semibold text-foreground">Farm-Fresh Quality</h3>
               <p className="mt-2 text-muted-foreground">
                 Sourced directly from local farms to ensure you get the freshest products every day.
               </p>
@@ -70,7 +70,7 @@ export default function Home() {
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Award className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-semibold">Hygienic & Pure</h3>
+              <h3 className="text-xl font-semibold text-foreground">Hygienic & Pure</h3>
               <p className="mt-2 text-muted-foreground">
                 Processed and packaged with the highest standards of hygiene for your family's safety.
               </p>
@@ -79,7 +79,7 @@ export default function Home() {
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Truck className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-semibold">Reliable Delivery</h3>
+              <h3 className="text-xl font-semibold text-foreground">Reliable Delivery</h3>
               <p className="mt-2 text-muted-foreground">
                 Get your daily dose of freshness delivered right to your doorstep, on time.
               </p>
