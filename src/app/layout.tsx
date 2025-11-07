@@ -4,7 +4,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { CartProvider } from '@/context/cart-context';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import Chatbot from '@/components/chatbot';
 
 export const metadata: Metadata = {
   title: 'ApnaDairy Online',
@@ -30,7 +29,6 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-          <Chatbot />
           <Toaster />
         </CartProvider>
       </body>
