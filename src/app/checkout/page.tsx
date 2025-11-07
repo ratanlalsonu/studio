@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/cart-context';
 import { Button } from '@/components/ui/button';
@@ -20,8 +21,6 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { QrCode } from 'lucide-react';
-import { Icons } from '@/components/icons';
 
 export default function CheckoutPage() {
   const { cartItems, totalPrice, clearCart } = useCart();
@@ -75,7 +74,7 @@ export default function CheckoutPage() {
               {paymentMethod === 'qr' && (
                   <div className="mt-6 flex flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted p-6">
                     <p className='mb-4 text-center text-muted-foreground'>Scan this QR code with your UPI app</p>
-                    <Icons.qrCode className="h-48 w-48" />
+                    <Image src="https://i.imgur.com/gGAnO3D.png" alt="Google Pay QR Code" width={192} height={192} className="h-48 w-48" />
                     <p className='mt-4 text-center font-semibold'>ApnaDairy Online</p>
                   </div>
               )}
