@@ -3,49 +3,49 @@
     {
       "id": "hero",
       "description": "A woman in a sari milking a cow in a rural Indian setting.",
-      "imageUrl": "https://images.unsplash.com/photo-1620703837926-203544b6139c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpbmRpYW4lMjB2aWxsYWdlJTIwY293fGVufDB8fHx8MTc2MjUyMTc3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1750085037110-d38f296e9613?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxpbmRpYW4lMjBkYWlyeXxlbnwwfHx8fDE3NjI1MjA4Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian dairy"
     },
     {
       "id": "milk",
       "description": "A traditional Indian steel container filled with fresh milk.",
-      "imageUrl": "https://images.unsplash.com/photo-1594514101614-25a17a04a625?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtaWxrJTIwaW4lMjBzdGVlbCUyMHV0ZW5zaWwlMjBpbmRpYXxlbnwwfHx8fDE3NjM0MzkzNTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1697305592240-463e811a58ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxpbmRpYW4lMjBtaWxrfGVufDB8fHx8MTc2MjUyMDgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian milk"
     },
     {
       "id": "buffalo-milk",
       "description": "A glass of rich milk next to a traditional Indian milk can.",
-      "imageUrl": "https://images.unsplash.com/photo-1606768072186-b4e6b7b58a74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtaWxrJTIwaW4lMjBzdGVlbCUyMGNvbnRhaW5lcnxlbnwwfHx8fDE3NjM0Mzk1NDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1611651625465-915f69b57608?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWlsayUyMGNvbnRhaW5lcnxlbnwwfHx8fDE3NjI1MjA4Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "milk container"
     },
     {
       "id": "ghee",
       "description": "A jar of golden desi ghee with a wooden spoon.",
-      "imageUrl": "https://images.unsplash.com/photo-1606121966183-c9e73c552576?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkZXNpJTIwZ2hlZXxlbnwwfHx8fDE3NjM0Mzk2MDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://picsum.photos/seed/ghee/600/400",
       "imageHint": "desi ghee"
     },
     {
       "id": "paneer",
       "description": "Cubes of fresh paneer on a wooden board with spices.",
-      "imageUrl": "https://images.unsplash.com/photo-1626538142279-a4deb1357077?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBwYW5lZXJ8ZW58MHx8fHwxNzYzNDM5NjQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1657186618738-9dfbcee196b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBwYW5lZXJ8ZW58MHx8fHwxNzYyNTIwODM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian paneer"
     },
     {
       "id": "khoya",
       "description": "Khoya (mawa) being prepared in a traditional Indian kadhai.",
-      "imageUrl": "https://images.unsplash.com/photo-1615858055629-eea2ba61b782?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYXdhJTIwaW5kaWFuJTIwc3dlZXR8ZW58MHx8fHwxNzYzNDM5Njk3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1695568181440-aca4dac18650?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpbmRpYW4lMjBzd2VldHxlbnwwfHx8fDE3NjI1MDQ4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian sweet"
     },
     {
       "id": "chhena",
       "description": "Freshly made chhena for making Indian sweets like rasgulla.",
-      "imageUrl": "https://images.unsplash.com/photo-1613434443148-3f1437a3449a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyYXNndWxsYSUyMHN3ZWV0fGVufDB8fHx8MTc2MzQzOTc4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1590671909091-43ff144014fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxpbmRpYW4lMjBzd2VldHN8ZW58MHx8fHwxNzYyNDQwNzY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian sweets"
     },
     {
       "id": "curd",
       "description": "A traditional earthen pot (matka) filled with creamy curd.",
-      "imageUrl": "https://images.unsplash.com/photo-1602562141513-c357b9e115c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBjdXJkJTIwcG90fGVufDB8fHx8MTc2MzQzOTgzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1630851840633-f96999247032?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpbmRpYW4lMjBjdXJkfGVufDB8fHx8MTc2MjUyMDgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian curd"
     }
   ]
