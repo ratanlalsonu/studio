@@ -13,6 +13,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 
 const navItems = [
@@ -26,26 +27,44 @@ export default function Header() {
   const isMobile = useIsMobile();
   const [showSearch, setShowSearch] = useState(false);
 
-  const SearchBar = () => (
-    <div className="relative flex items-center">
-      {showSearch && (
-        <Input
-          type="search"
-          placeholder="Search products..."
-          className="h-9 w-full rounded-full bg-background/80 pr-10 sm:w-64"
-        />
-      )}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute right-0"
-        onClick={() => setShowSearch(!showSearch)}
-      >
-        <Search />
-        <span className="sr-only">Search</span>
-      </Button>
-    </div>
-  );
+  const SearchBar = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [query, setQuery] = useState(searchParams.get('q') || '');
+
+    const handleSearch = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!query.trim()) {
+        router.push('/products');
+      } else {
+        router.push(`/products?q=${encodeURIComponent(query)}`);
+      }
+    };
+    
+    return (
+      <form onSubmit={handleSearch} className="relative flex items-center">
+        {showSearch && (
+          <Input
+            type="search"
+            placeholder="Search products..."
+            className="h-9 w-full rounded-full bg-background/80 pr-10 sm:w-64"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        )}
+        <Button
+          type={showSearch ? 'submit' : 'button'}
+          variant="ghost"
+          size="icon"
+          className="absolute right-0"
+          onClick={!showSearch ? () => setShowSearch(true) : undefined}
+        >
+          <Search />
+          <span className="sr-only">Search</span>
+        </Button>
+      </form>
+    );
+  };
 
 
   const DesktopNav = () => (
