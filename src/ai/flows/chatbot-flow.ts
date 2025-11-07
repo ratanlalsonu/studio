@@ -16,7 +16,16 @@ export async function chatbotQuery(input: string): Promise<string> {
   return chatbotFlow(input);
 }
 
-const chatbotPrompt = `You are a helpful and friendly chatbot for a Dairy Business Website called ApnaDairy.
+const chatbotFlow = ai.defineFlow(
+  {
+    name: 'chatbotFlow',
+    inputSchema: ChatbotInputSchema,
+    outputSchema: ChatbotOutputSchema,
+  },
+  async (prompt) => {
+    const llmResponse = await generate({
+      model: 'googleai/gemini-pro',
+      prompt: `You are a helpful and friendly chatbot for a Dairy Business Website called ApnaDairy.
 Your role is to answer user questions related to:
 
 - Buffalo milk
@@ -49,19 +58,8 @@ Guidelines:
 Always end your response with:
 "How else can I help you?"
 
-User question: {{{prompt}}}
-`;
-
-const chatbotFlow = ai.defineFlow(
-  {
-    name: 'chatbotFlow',
-    inputSchema: ChatbotInputSchema,
-    outputSchema: ChatbotOutputSchema,
-  },
-  async (prompt) => {
-    const llmResponse = await generate({
-      model: 'googleai/gemini-pro',
-      prompt: chatbotPrompt.replace('{{{prompt}}}', prompt),
+User question: ${prompt}
+`,
     });
 
     return (
