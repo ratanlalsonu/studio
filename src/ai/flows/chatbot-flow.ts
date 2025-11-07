@@ -61,7 +61,7 @@ const chatbotFlow = ai.defineFlow(
   async (prompt) => {
     const llmResponse = await generate({
       model: 'googleai/gemini-pro',
-      prompt: chatbotPrompt.replace('{{prompt}}', prompt),
+      prompt: chatbotPrompt.replace('{{{prompt}}}', prompt),
     });
 
     return (
