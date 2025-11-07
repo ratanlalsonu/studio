@@ -81,7 +81,7 @@ export default function Header() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-secondary hover:bg-secondary/90")}
+          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-[#1e2a60] hover:bg-[#1e2a60]/90")}
         >
           {item.label}
         </Link>
@@ -151,7 +151,7 @@ export default function Header() {
           <Button asChild variant="outline" size="sm">
             <Link href="/login">Login</Link>
           </Button>
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="transition-transform duration-200 hover:scale-105">
             <Link href="/signup">Sign Up</Link>
           </Button>
           {isMobile && <MobileNav />}
