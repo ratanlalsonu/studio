@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Milk, ShoppingCart, Menu, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
 import {
@@ -14,6 +14,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 
 const navItems = [
@@ -68,12 +69,12 @@ export default function Header() {
 
 
   const DesktopNav = () => (
-    <nav className="hidden items-center space-x-6 md:flex">
+    <nav className="hidden items-center space-x-2 md:flex">
       {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
-          className="text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
+          className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }))}
         >
           {item.label}
         </Link>
@@ -100,7 +101,7 @@ export default function Header() {
             <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-md p-2 text-lg font-medium hover:bg-accent"
+                className={cn(buttonVariants({ variant: 'secondary' }), "w-full justify-start text-lg")}
             >
                 {item.label}
             </Link>
