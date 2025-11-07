@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Beef, Milk, ShoppingCart, User, Menu, Package } from 'lucide-react';
+import { Beef, Milk, ShoppingCart, User, Menu, Package, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -11,6 +11,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 
 const navItems = [
@@ -22,6 +24,29 @@ const navItems = [
 export default function Header() {
   const { cartCount } = useCart();
   const isMobile = useIsMobile();
+  const [showSearch, setShowSearch] = useState(false);
+
+  const SearchBar = () => (
+    <div className="relative flex items-center">
+      {showSearch && (
+        <Input
+          type="search"
+          placeholder="Search products..."
+          className="h-9 w-full rounded-full bg-background/80 pr-10 sm:w-64"
+        />
+      )}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-0"
+        onClick={() => setShowSearch(!showSearch)}
+      >
+        <Search />
+        <span className="sr-only">Search</span>
+      </Button>
+    </div>
+  );
+
 
   const DesktopNav = () => (
     <nav className="hidden items-center space-x-6 md:flex">
@@ -80,10 +105,11 @@ export default function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-center">
-            {!isMobile && <DesktopNav />}
+            {!isMobile ? <DesktopNav /> : <SearchBar />}
         </div>
         
         <div className="flex items-center space-x-2 sm:space-x-4">
+          {!isMobile && <SearchBar />}
           <Button asChild variant="ghost" size="icon">
             <Link href="/cart">
               <ShoppingCart />
