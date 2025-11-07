@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Bot, X, Send, User, Loader2 } from 'lucide-react';
-import { chatbotQuery } from '@/ai/flows/chatbot-flow';
 
 type Message = {
   sender: 'user' | 'bot';
@@ -24,12 +23,23 @@ export default function Chatbot() {
 
     const userMessage: Message = { sender: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = input;
     setInput('');
     setIsLoading(true);
 
     try {
-      const botResponse = await chatbotQuery(input);
-      const botMessage: Message = { sender: 'bot', text: botResponse };
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: currentInput }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const botResponse = await response.json();
+      const botMessage: Message = { sender: 'bot', text: botResponse.response };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       const errorMessage: Message = { sender: 'bot', text: "Sorry, I'm having trouble connecting. Please try again later." };
