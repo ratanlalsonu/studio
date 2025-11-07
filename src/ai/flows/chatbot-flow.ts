@@ -6,7 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { generate } from 'genkit/generate';
+import { generate } from 'genkit';
 import { z } from 'zod';
 
 const ChatbotInputSchema = z.string();
@@ -49,7 +49,7 @@ Guidelines:
 Always end your response with:
 "How else can I help you?"
 
-User question: ${'{{prompt}}'}
+User question: {{{prompt}}}
 `;
 
 const chatbotFlow = ai.defineFlow(
@@ -65,7 +65,7 @@ const chatbotFlow = ai.defineFlow(
     });
 
     return (
-      llmResponse.text() ||
+      llmResponse.text ||
       "I'm sorry, I couldn't generate a response. How else can I help you?"
     );
   }
