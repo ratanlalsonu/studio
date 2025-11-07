@@ -11,7 +11,7 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const imagePlaceholder = PlaceHolderImages.find((img) => img.id === product.id);
-  const priceDisplay = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(product.pricePerUnit);
+  const priceDisplay = `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)} Rupees`;
   
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg">

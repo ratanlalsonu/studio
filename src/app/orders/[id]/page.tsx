@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export default function OrderDetailPage({ params }: { params: { id: string } }) {
   const order = orders.find((o) => o.id === params.id);
-  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
+  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
 
   if (!order) {
     notFound();

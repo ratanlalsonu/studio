@@ -11,7 +11,7 @@ import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, totalPrice } = useCart();
-  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
+  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
 
   return (
     <div className="container mx-auto px-4 py-12">

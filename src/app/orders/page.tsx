@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Package, Receipt } from 'lucide-react';
 
 export default function OrdersPage() {
-  const formatPrice = (price: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(price);
+  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
 
   return (
     <div className="container mx-auto px-4 py-12">

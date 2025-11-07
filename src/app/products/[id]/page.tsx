@@ -59,6 +59,8 @@ function ProductDisplay({ product }: { product: Product }) {
     return (pricePerSelectedUnit * quantity);
   }
 
+  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid gap-8 md:grid-cols-2 md:gap-12">
@@ -108,7 +110,7 @@ function ProductDisplay({ product }: { product: Product }) {
             
             <div className="mt-6">
                 <p className="text-2xl font-bold text-primary">
-                    Total Price: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(getPrice())}
+                    Total Price: {formatPrice(getPrice())}
                 </p>
             </div>
             
