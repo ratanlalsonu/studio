@@ -45,7 +45,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-start">
                 <MapPin className="mr-3 mt-1 h-4 w-4 flex-shrink-0 text-primary" />
-                <span className="text-secondary-foreground/80">123 Dairy Lane, Milkville, India</span>
+                <span className="text-secondary-foreground/80">210201 atarra, banda</span>
               </li>
               <li className="flex items-center">
                 <Mail className="mr-3 h-4 w-4 text-primary" />
