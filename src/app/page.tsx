@@ -39,7 +39,18 @@ export default function Home() {
       </section>
 
       {/* Introduction Section */}
-      <section className="bg-card py-16">
+      <section className="relative bg-card py-16">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 -translate-y-1/2 z-10"
+        >
+          <Image
+            src="https://i.imgur.com/tuqGXw1.png"
+            alt="Milk splash"
+            width={1920}
+            height={200}
+            className="w-full object-cover"
+          />
+        </div>
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-headline text-3xl font-bold text-foreground">
             Pure, Natural, and Fresh
