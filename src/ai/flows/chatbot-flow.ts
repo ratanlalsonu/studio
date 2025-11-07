@@ -6,6 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { generate } from 'genkit/generate';
 import { z } from 'zod';
 
 const ChatbotInputSchema = z.string();
@@ -15,11 +16,7 @@ export async function chatbotQuery(input: string): Promise<string> {
   return chatbotFlow(input);
 }
 
-const chatbotPrompt = ai.definePrompt({
-  name: 'chatbotPrompt',
-  input: { schema: ChatbotInputSchema },
-  output: { schema: ChatbotOutputSchema },
-  prompt: `You are a helpful and friendly chatbot for a Dairy Business Website called ApnaDairy.
+const chatbotPrompt = `You are a helpful and friendly chatbot for a Dairy Business Website called ApnaDairy.
 Your role is to answer user questions related to:
 
 - Buffalo milk
@@ -52,9 +49,8 @@ Guidelines:
 Always end your response with:
 "How else can I help you?"
 
-User question: {{{prompt}}}
-`,
-});
+User question: ${'{{prompt}}'}
+`;
 
 const chatbotFlow = ai.defineFlow(
   {
@@ -63,7 +59,14 @@ const chatbotFlow = ai.defineFlow(
     outputSchema: ChatbotOutputSchema,
   },
   async (prompt) => {
-    const { output } = await chatbotPrompt(prompt);
-    return output || "I'm sorry, I couldn't generate a response. How else can I help you?";
+    const llmResponse = await generate({
+      model: 'googleai/gemini-pro',
+      prompt: chatbotPrompt.replace('{{prompt}}', prompt),
+    });
+
+    return (
+      llmResponse.text() ||
+      "I'm sorry, I couldn't generate a response. How else can I help you?"
+    );
   }
 );
