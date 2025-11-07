@@ -32,7 +32,7 @@ export default function Home() {
           <p className="mt-4 max-w-2xl text-lg md:text-xl">
             Fresh from the farm, delivered to your door.
           </p>
-          <Button asChild className="mt-8" size="lg">
+          <Button asChild className="mt-8 transition-transform duration-200 hover:scale-105" size="lg">
             <Link href="/products">Browse Products</Link>
           </Button>
         </div>
