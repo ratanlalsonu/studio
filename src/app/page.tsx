@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { products } from '@/lib/data';
@@ -7,21 +6,21 @@ import ProductCard from '@/components/product-card';
 import { Leaf, Award, Truck } from 'lucide-react';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find((img) => img.id === 'hero');
+  const heroData = PlaceHolderImages.find((img) => img.id === 'hero');
   const featuredProducts = products.slice(0, 4);
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[60vh] w-full text-white">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
-            fill
-            className="object-cover"
-            priority
-            data-ai-hint={heroImage.imageHint}
+        {heroData && heroData.videoUrl && (
+          <video
+            src={heroData.videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute z-0 h-full w-full object-cover"
           />
         )}
         <div className="absolute inset-0 bg-black/50" />
