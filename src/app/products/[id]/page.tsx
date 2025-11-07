@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { products } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +17,7 @@ import {
 import { useCart } from '@/context/cart-context';
 import type { Product, CartItem } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 // This is a client component to handle state and interactions
 function ProductDisplay({ product }: { product: Product }) {
@@ -28,10 +28,12 @@ function ProductDisplay({ product }: { product: Product }) {
 
   const handleAddToCart = () => {
     let price = 0;
+    let effectiveUnit = unit;
     if (unit === 'litre' || unit === 'kg') {
       price = product.pricePerUnit;
     } else if (unit === 'ml' || unit === 'g') {
       price = product.pricePerUnit / 1000;
+      // Convert to base unit for cart consistency if needed, e.g. 500g becomes 0.5kg
     }
 
     const itemToAdd: CartItem = {
@@ -39,7 +41,7 @@ function ProductDisplay({ product }: { product: Product }) {
       name: product.name,
       image: product.image,
       quantity,
-      unit,
+      unit: effectiveUnit,
       price,
     };
     addToCart(itemToAdd);
@@ -65,15 +67,17 @@ function ProductDisplay({ product }: { product: Product }) {
     <div className="container mx-auto px-4 py-12">
       <div className="grid gap-8 md:grid-cols-2 md:gap-12">
         <div className="relative aspect-square h-full w-full overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-            data-ai-hint={imagePlaceholder?.imageHint || ''}
-          />
+          {product.image && (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+              data-ai-hint={imagePlaceholder?.imageHint || ''}
+            />
+          )}
         </div>
         <div className="flex flex-col justify-center">
           <h1 className="font-headline text-3xl font-bold md:text-4xl">{product.name}</h1>
