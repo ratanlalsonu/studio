@@ -25,11 +25,11 @@ const qaMap = [
   { keywords: ["cow milk price", "gai ka doodh rate"], answer: "Cow milk price is ₹55 per litre. How else can I help you?" },
   { keywords: ["a2 milk price", "a2 cow milk available"], answer: "Yes, A2 cow milk is available at ₹90 per litre. How else can I help you?" },
   // Quality
-  { keywords: ["fat kitna hai", "snf kitna hai", "fat snf"], answer: "Our milk maintains high-quality Fat and SNF values according to fresh dairy standards. How else can I help you?" },
-  { keywords: ["milk fresh hai?", "fresh milk?"], answer: "Yes! We provide daily fresh milk from our trusted dairy sources. How else can I help you?" },
+  { keywords: ["fat kitna hai", "snf kitna hai", "fat snf", "milk fat"], answer: "Our milk maintains high-quality Fat and SNF values according to fresh dairy standards. How else can I help you?" },
+  { keywords: ["milk fresh hai?", "fresh milk?", "organic milk"], answer: "Yes! We provide daily fresh milk from our trusted dairy sources. How else can I help you?" },
   { keywords: ["pure milk?", "adulteration free"], answer: "Our milk is 100% pure and free from any adulteration. How else can I help you?" },
   // Packaging
-  { keywords: ["packet", "bottle", "packaging"], answer: "We provide milk in secured packets and sealed bottles depending on availability. How else can I help you?" },
+  { keywords: ["packet", "bottle", "packaging", "milk packaging"], answer: "We provide milk in secured packets and sealed bottles depending on availability. How else can I help you?" },
   { keywords: ["half litre packet", "1 litre packet"], answer: "Yes! We provide both 500ml and 1 litre milk packs. How else can I help you?" },
   // Delivery
   { keywords: ["delivery timing", "delivery kab hoti hai"], answer: "We deliver fresh milk every morning. Bulk orders can be delivered based on schedule. How else can I help you?" },
@@ -41,16 +41,17 @@ const qaMap = [
   { keywords: ["curd price", "dahi"], answer: "Fresh curd is available at ₹70 per kg. How else can I help you?" },
   { keywords: ["ghee price", "a2 ghee"], answer: "Pure ghee is available at ₹900 per litre, and A2 ghee is available. How else can I help you?" },
   { keywords: ["butter milta hai?"], answer: "Yes, fresh butter is available on order. How else can I help you?" },
+  { keywords: ["what products", "products available", "dairy products"], answer: "We offer a range of fresh dairy products including Cow Milk, Buffalo Milk, Ghee, Paneer, Curd, and more. You can see all of them on our Products page. How else can I help you?" },
   // Order
-  { keywords: ["order kaise kare", "order place"], answer: "You can place your order directly on our website or WhatsApp. How else can I help you?" },
+  { keywords: ["order kaise kare", "order place", "milk order"], answer: "You can place your order directly on our website or WhatsApp. How else can I help you?" },
   { keywords: ["minimum order", "minimum quantity"], answer: "There is no minimum order for regular customers. For bulk orders, minimum may apply. How else can I help you?" },
   { keywords: ["shop address", "location"], answer: "You can visit our dairy shop at the address mentioned on our Contact Us page. How else can I help you?" },
   { keywords: ["cash on delivery", "cod"], answer: "Yes, cash on delivery is available. How else can I help you?" },
-  { keywords: ["online payment"], answer: "We accept UPI, PhonePe, Google Pay, Paytm, and all digital payments. How else can I help you?" },
+  { keywords: ["online payment", "website support"], answer: "We accept UPI, PhonePe, Google Pay, Paytm, and all digital payments. How else can I help you?" },
   { keywords: ["order modify", "order change"], answer: "You can modify your order by contacting customer support before delivery time. How else can I help you?" },
   { keywords: ["order cancel", "cancel order"], answer: "You can cancel your order before it is dispatched. How else can I help you?" },
   // Subscription
-  { keywords: ["monthly subscription", "milk subscription"], answer: "Yes! Monthly milk subscription is available. You can choose daily quantity and preferred delivery time. How else can I help you?" },
+  { keywords: ["monthly subscription", "milk subscription", "subscription milk service"], answer: "Yes! Monthly milk subscription is available. You can choose daily quantity and preferred delivery time. How else can I help you?" },
   { keywords: ["subscription pause", "stop milk"], answer: "You can pause your subscription anytime by contacting support. How else can I help you?" },
   { keywords: ["out of station", "stop delivery"], answer: "If you are traveling, we will stop delivery temporarily. How else can I help you?" },
   { keywords: ["subscription discount"], answer: "Subscription customers get priority delivery and special offers. How else can I help you?" },
@@ -65,11 +66,17 @@ const qaMap = [
   { keywords: ["milk khatta", "bad milk"], answer: "We provide quick replacement for spoiled or bad milk. How else can I help you?" },
   { keywords: ["wrong order"], answer: "If you received a wrong order, we will replace it immediately. How else can I help you?" },
   { keywords: ["payment cut gaya", "payment issue"], answer: "If payment was deducted but order not placed, our support team will assist you. How else can I help you?" },
+  // Farmer & Farming Support
+  { keywords: ["dairy farm", "farming guidance", "farmer support", "dairy farming tips"], answer: "We provide guidance and support for dairy farmers, including tips on best practices and cattle management. How else can I help you?" },
+  { keywords: ["cattle feed", "green fodder", "dry fodder", "silage", "tmr feed", "mineral mixture", "cattle nutrition"], answer: "We provide guidance on cattle nutrition, including information on green fodder, dry fodder, silage, TMR, and mineral mixtures for better milk production. How else can I help you?" },
+  { keywords: ["murrah buffalo", "sahiwal cow", "best cattle breed"], answer: "Murrah buffaloes and Sahiwal cows are excellent breeds for dairy farming. We can provide more information if you need it. How else can I help you?" },
+  { keywords: ["milk testing", "milk quality test"], answer: "We perform regular quality tests for Fat, SNF, and purity. Test reports are available on request. How else can I help you?" },
+  { keywords: ["lactation", "milking machine", "milk production increase", "dairy management"], answer: "For increasing milk production, we recommend proper nutrition, a healthy lactation cycle, and modern dairy management practices like using a milking machine. How else can I help you?" },
   // General
   { keywords: ["farm kahan hai", "farm location"], answer: "Our farm/location details are available on our Contact page. How else can I help you?" },
   { keywords: ["milk test report", "test available"], answer: "Milk quality test reports are available on request. How else can I help you?" },
   { keywords: ["low fat milk", "diet milk"], answer: "Yes, low-fat milk option is available. How else can I help you?" },
-  { keywords: ["lactose free milk"], answer: "Lactose-free milk is available only on advance order. How else can I help you?" },
+  { keywords: ["lactose free milk", "lactose"], answer: "Lactose-free milk is available only on advance order. How else can I help you?" },
 ];
 
 const defaultAnswer = "Please contact us at 1234567891. How else can I help you?";
