@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "A beautiful landscape video.",
-      "videoUrl": "https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4",
-      "imageHint": "landscape video"
+      "description": "A woman in a sari milking a cow in a rural Indian setting.",
+      "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSZz6GSWVBWD8_Wp3z5Slt0uWKYadZMkICqHPBqKIdm5FaK3bEn",
+      "imageHint": "indian dairy"
     },
     {
       "id": "milk",
