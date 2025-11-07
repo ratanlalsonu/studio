@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Beef, Milk, ShoppingCart, User, Menu, Package, Search } from 'lucide-react';
+import { Milk, ShoppingCart, Menu, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -140,11 +140,11 @@ export default function Header() {
               <span className="sr-only">Shopping Cart</span>
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/login">
-              <User />
-              <span className="sr-only">User Profile</span>
-            </Link>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/login">Login</Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link href="/signup">Sign Up</Link>
           </Button>
           {isMobile && <MobileNav />}
         </div>
