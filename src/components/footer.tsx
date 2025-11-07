@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-2">
                 <Milk className="h-7 w-7 text-primary" />
-                <span className="font-logo text-2xl">ApnaDairy</span>
+                <span className="font-logo text-2xl font-bold">ApnaDairy</span>
             </div>
             <p className="mt-4 text-sm text-secondary-foreground/80">
               ApnaDairy delivers farm-fresh dairy products right to your doorstep, ensuring quality and purity for your family.
