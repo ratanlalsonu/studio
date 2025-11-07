@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -8,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import {
   AlertDialog,
@@ -25,6 +28,14 @@ import { useToast } from '@/hooks/use-toast';
 export default function CheckoutPage() {
   const { cartItems, totalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [address, setAddress] = useState({
+      fullName: '',
+      phone: '',
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+  });
   const router = useRouter();
   const { toast } = useToast();
   const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
@@ -34,8 +45,25 @@ export default function CheckoutPage() {
     if(typeof window !== "undefined") router.push('/products');
     return null;
   }
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setAddress(prevState => ({ ...prevState, [id]: value }));
+  };
+
+  const isAddressValid = () => {
+      return Object.values(address).every(field => field.trim() !== '');
+  }
 
   const handlePlaceOrder = () => {
+    if (!isAddressValid()) {
+        toast({
+            title: "Incomplete Address",
+            description: "Please fill in all the shipping details.",
+            variant: "destructive",
+        });
+        return;
+    }
     // In a real app, this would submit the order to the backend.
     // Here, we just show a success message and clear the cart.
     clearCart();
@@ -51,7 +79,40 @@ export default function CheckoutPage() {
     <div className="container mx-auto px-4 py-12">
       <h1 className="mb-8 text-center font-headline text-4xl font-bold">Checkout</h1>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
-        <div className="md:col-span-3">
+        <div className="space-y-8 md:col-span-3">
+          <Card>
+            <CardHeader>
+                <CardTitle>Shipping Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="grid gap-2 sm:col-span-2">
+                        <Label htmlFor="fullName">Full Name</Label>
+                        <Input id="fullName" placeholder="John Doe" value={address.fullName} onChange={handleInputChange} required/>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input id="phone" type="tel" placeholder="10-digit mobile number" value={address.phone} onChange={handleInputChange} required maxLength={10} pattern="[0-9]{10}" />
+                    </div>
+                    <div className="grid gap-2">
+                         <Label htmlFor="pincode">Pincode</Label>
+                        <Input id="pincode" placeholder="e.g. 110001" value={address.pincode} onChange={handleInputChange} required />
+                    </div>
+                    <div className="grid gap-2 sm:col-span-2">
+                        <Label htmlFor="street">Address (Street, Locality)</Label>
+                        <Textarea id="street" placeholder="House No, Building Name, Street, Landmark" value={address.street} onChange={handleInputChange} required />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="city">City</Label>
+                        <Input id="city" placeholder="e.g. New Delhi" value={address.city} onChange={handleInputChange} required/>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="state">State</Label>
+                        <Input id="state" placeholder="e.g. Delhi" value={address.state} onChange={handleInputChange} required/>
+                    </div>
+                </div>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle>Payment Method</CardTitle>
@@ -82,7 +143,7 @@ export default function CheckoutPage() {
           </Card>
         </div>
         <div className="md:col-span-2">
-          <Card>
+          <Card className="sticky top-24">
             <CardHeader>
               <CardTitle>Your Order</CardTitle>
             </CardHeader>
