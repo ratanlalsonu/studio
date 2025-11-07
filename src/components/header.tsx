@@ -22,6 +22,7 @@ const navItems = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
   { href: '/orders', label: 'My Orders' },
+  { href: '/query', label: 'Query' },
 ];
 
 export default function Header() {
