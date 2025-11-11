@@ -1,0 +1,6 @@
+OrderID,Date,Product,Quantity,Unit,UnitPrice,TotalPrice
+ORD-12345,2024-07-20,Fresh Cow Milk,2,litre,50,100
+ORD-12345,2024-07-20,Fresh Paneer,500,g,0.4,200
+ORD-67890,2024-07-22,Pure Desi Ghee,250,g,0.6,150
+ORD-67890,2024-07-22,Thick Curd,1,kg,80,80
+ORD-11223,2024-07-23,Fresh Cow Milk,1,litre,50,50
