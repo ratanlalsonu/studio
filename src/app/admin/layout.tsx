@@ -1,167 +1,109 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { LayoutDashboard, ShoppingCart, Users, Package, BarChart, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { UploadCloud, Handshake } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
+const sidebarNavItems = [
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart },
+];
 
-export default function SellerPage() {
-  const [formState, setFormState] = useState({
-    sellerName: '',
-    sellerContact: '',
-    productName: '',
-    productCategory: '',
-    productDescription: '',
-    price: '',
-    image: null,
-  });
-  const [showConfirmation, setShowConfirmation] = useState(false);
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormState(prevState => ({ ...prevState, [id]: value }));
-  };
-
-  const handleCategoryChange = (value: string) => {
-    setFormState(prevState => ({ ...prevState, productCategory: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, you'd handle the form submission, validation, and image upload here.
-    console.log('Seller Form Submitted:', formState);
-    setShowConfirmation(true);
-  };
-
-  const handleDialogClose = () => {
-    setShowConfirmation(false);
-    // Reset form
-    setFormState({
-        sellerName: '',
-        sellerContact: '',
-        productName: '',
-        productCategory: '',
-        productDescription: '',
-        price: '',
-        image: null,
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        router.push('/admin/login');
+      }
+      setIsLoading(false);
     });
+    return () => unsubscribe();
+  }, [router]);
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/admin/login');
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null; // The redirect is handled in the effect
+  }
 
   return (
-    <>
-      <div className="container mx-auto flex min-h-[80vh] items-center justify-center bg-background px-4 py-12">
-        <Card className="w-full max-w-2xl">
-          <CardHeader className="text-center">
-            <Handshake className="mx-auto h-12 w-12 text-primary" />
-            <CardTitle className="mt-4 text-3xl font-bold">Sell Your Products With Us!</CardTitle>
-            <CardDescription>
-              Reach thousands of customers. Fill out the form below to list your product on ApnaDairy.
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="grid gap-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="grid gap-2">
-                  <Label htmlFor="sellerName">Your Name</Label>
-                  <Input id="sellerName" placeholder="John Doe" required onChange={handleInputChange} value={formState.sellerName} />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="sellerContact">Contact Email</Label>
-                  <Input id="sellerContact" type="email" placeholder="john@example.com" required onChange={handleInputChange} value={formState.sellerContact}/>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="productName">Product Name</Label>
-                <Input id="productName" placeholder="e.g., Fresh Organic A2 Ghee" required onChange={handleInputChange} value={formState.productName}/>
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="grid gap-2">
-                    <Label htmlFor="productCategory">Product Category</Label>
-                    <Select onValueChange={handleCategoryChange} required value={formState.productCategory}>
-                        <SelectTrigger id="productCategory">
-                            <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="milk">Milk</SelectItem>
-                            <SelectItem value="ghee">Ghee</SelectItem>
-                            <SelectItem value="paneer">Paneer</SelectItem>
-                            <SelectItem value="curd">Curd</SelectItem>
-                             <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="price">Price (per Litre/Kg)</Label>
-                    <Input id="price" type="number" placeholder="e.g., 650" required onChange={handleInputChange} value={formState.price}/>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="productDescription">Product Description</Label>
-                <Textarea id="productDescription" placeholder="Describe your product's features, quality, and benefits." required onChange={handleInputChange} value={formState.productDescription}/>
-              </div>
-               <div className="grid gap-2">
-                 <Label htmlFor="image">Product Image</Label>
-                 <div className="flex items-center justify-center w-full">
-                    <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-accent">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
-                            <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p className="text-xs text-muted-foreground">PNG, JPG, or GIF (MAX. 800x400px)</p>
-                        </div>
-                        <Input id="image-upload" type="file" className="hidden" />
-                    </label>
-                </div> 
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" size="lg" className="w-full">
-                Submit for Review
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
+    <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-sidebar text-sidebar-foreground lg:block">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-[60px] items-center border-b px-6">
+            <Link className="flex items-center gap-2 font-semibold" href="/admin">
+              <LayoutDashboard className="h-6 w-6 text-sidebar-primary" />
+              <span className="">Admin Panel</span>
+            </Link>
+          </div>
+          <div className="flex-1 overflow-auto py-2">
+            <nav className="grid items-start px-4 text-sm font-medium">
+              {sidebarNavItems.map(item => (
+                 <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-sidebar-accent ${pathname === item.href ? 'bg-sidebar-accent' : ''}`}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </Link>
+              ))}
+            </nav>
+          </div>
+          <div className="mt-auto p-4">
+             <Button size="sm" className="w-full" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
+          </div>
+        </div>
       </div>
-
-      <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Submission Received!</AlertDialogTitle>
-            <AlertDialogDescription>
-              Thank you for submitting your product. Our team will review it and get back to you at {formState.sellerContact} shortly.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={handleDialogClose}>OK</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+      <div className="flex flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-background px-6 lg:h-[60px]">
+            {/* Mobile nav could be added here */}
+            <div className="w-full flex-1">
+                {/* Header content like search or user menu can go here */}
+            </div>
+        </header>
+        <main className="flex-1 bg-muted/40 p-4 md:p-6">{children}</main>
+      </div>
+    </div>
   );
 }

@@ -77,6 +77,9 @@ export default function Footer() {
             </div>
             <div className="mt-8 text-center text-sm text-secondary-foreground/80">
               <p>&copy; {new Date().getFullYear()} ApnaDairy Online. All rights reserved.</p>
+              <p className="mt-2">
+                <Link href="/admin/login" className="text-xs hover:text-primary transition-colors">Admin Panel</Link>
+              </p>
             </div>
         </div>
 
