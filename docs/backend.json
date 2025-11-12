@@ -1,0 +1,45 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a regular customer user in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user's unique ID from Firebase Auth." },
+        "fullName": { "type": "string", "description": "The user's full name." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "role": { "type": "string", "enum": ["user", "seller"], "description": "The role of the user." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the user was created." }
+      },
+      "required": ["uid", "fullName", "email", "role", "createdAt"]
+    },
+    "SellerProfile": {
+      "title": "Seller Profile",
+      "description": "Represents a seller user in the system, extending the base user profile.",
+      "type": "object",
+      "properties": {
+         "uid": { "type": "string", "description": "The user's unique ID from Firebase Auth." },
+        "fullName": { "type": "string", "description": "The seller's full name or business name." },
+        "email": { "type": "string", "format": "email", "description": "The seller's contact email address." },
+        "role": { "type": "string", "enum": ["seller"], "description": "The role, which is always 'seller'." },
+        "phone": { "type": "string", "description": "The seller's contact phone number." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the seller account was created." }
+      },
+      "required": ["uid", "fullName", "email", "role", "phone", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores public profile information for regular users."
+    },
+    "/sellers/{sellerId}": {
+      "schema": { "$ref": "#/entities/SellerProfile" },
+      "description": "Stores public profile information for sellers."
+    }
+  }
+}

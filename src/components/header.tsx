@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Milk, ShoppingCart, Menu, Search, LogOut } from 'lucide-react';
+import { Milk, ShoppingCart, Menu, Search, LogOut, Handshake, User as UserIcon } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -14,7 +14,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase/auth/use-user';
@@ -27,23 +27,32 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
-  { href: '/orders', label: 'My Orders' },
-  { href: '/sell-with-us', label: 'Sell with Us' },
-  { href: '/query', label: 'Query' },
 ];
+
+const userNavItems = [
+    { href: '/orders', label: 'My Orders' },
+    { href: '/query', label: 'Query' },
+];
+
+const sellerNavItems = [
+    { href: '/seller/dashboard', label: 'Dashboard' },
+];
+
 
 export default function Header() {
   const { cartCount } = useCart();
   const isMobile = useIsMobile();
   const [showSearch, setShowSearch] = useState(false);
   const { toast } = useToast();
-  const { user, isLoading } = useUser();
+  const { user, profile, isLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignOut = async () => {
     try {
@@ -104,7 +113,7 @@ export default function Header() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(buttonVariants({ size: 'sm' }), "text-white bg-[#1e2a60] hover:bg-[#1e2a60]/90 transition-colors")}
+          className={cn(buttonVariants({ size: 'sm', variant: pathname === item.href ? 'secondary' : 'ghost' }))}
         >
           {item.label}
         </Link>
@@ -127,15 +136,21 @@ export default function Header() {
             <span className="font-logo text-3xl font-bold">ApnaDairy</span>
           </Link>
           <nav className="flex flex-col space-y-2">
-            {navItems.map((item) => (
+            {[...navItems, ...userNavItems].map((item) => (
             <Link
                 key={item.href}
                 href={item.href}
-                className={cn(buttonVariants({ variant: 'secondary' }), "w-full justify-start text-lg transition-colors")}
+                className={cn(buttonVariants({ variant: 'ghost' }), "w-full justify-start text-lg transition-colors")}
             >
                 {item.label}
             </Link>
             ))}
+             <Link
+                href="/sell-with-us"
+                className={cn(buttonVariants({ variant: 'ghost' }), "w-full justify-start text-lg transition-colors")}
+            >
+                Sell with Us
+            </Link>
           </nav>
         </div>
       </SheetContent>
@@ -148,13 +163,15 @@ export default function Header() {
     }
     
     if (user) {
-      const fallbackName = user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U';
+      const fallbackName = profile?.fullName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U';
+      const isSeller = profile?.role === 'seller';
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                <AvatarImage src={user.photoURL || undefined} alt={profile?.fullName || 'User'} />
                 <AvatarFallback>{fallbackName}</AvatarFallback>
               </Avatar>
             </Button>
@@ -162,10 +179,18 @@ export default function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                <p className="text-sm font-medium leading-none">{profile?.fullName}</p>
                 <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+                {(isSeller ? sellerNavItems : userNavItems).map(item => (
+                    <DropdownMenuItem key={item.href} asChild>
+                        <Link href={item.href}>{item.label}</Link>
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
@@ -177,14 +202,23 @@ export default function Header() {
     }
 
     return (
-      <div className="flex items-center space-x-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/login">Login</Link>
-        </Button>
-        <Button asChild size="sm">
-          <Link href="/signup">Sign Up</Link>
-        </Button>
-      </div>
+     <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm">
+                <UserIcon className="mr-2"/> Login
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel>Are you a...</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+                <Link href="/login"><UserIcon className="mr-2"/>Customer</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+                <Link href="/seller/login"><Handshake className="mr-2"/>Seller</Link>
+            </DropdownMenuItem>
+        </DropdownMenuContent>
+     </DropdownMenu>
     );
   };
 
@@ -206,17 +240,19 @@ export default function Header() {
         
         <div className="flex items-center space-x-2 sm:space-x-4">
           {!isMobile && <SearchBar />}
-          <Button asChild variant="ghost" size="icon" className="transition-colors">
-            <Link href="/cart">
-              <ShoppingCart />
-              {cartCount > 0 && (
-                <Badge className="absolute right-0 top-0 -mr-1 -mt-1 h-5 w-5 justify-center rounded-full p-0">
-                  {cartCount}
-                </Badge>
-              )}
-              <span className="sr-only">Shopping Cart</span>
-            </Link>
-          </Button>
+           {profile?.role !== 'seller' && (
+              <Button asChild variant="ghost" size="icon" className="transition-colors">
+                <Link href="/cart">
+                  <ShoppingCart />
+                  {cartCount > 0 && (
+                    <Badge className="absolute right-0 top-0 -mr-1 -mt-1 h-5 w-5 justify-center rounded-full p-0">
+                      {cartCount}
+                    </Badge>
+                  )}
+                  <span className="sr-only">Shopping Cart</span>
+                </Link>
+              </Button>
+           )}
           <UserNav />
           {isMobile && <MobileNav />}
         </div>

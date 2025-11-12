@@ -10,10 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Milk, Eye, EyeOff } from 'lucide-react';
+import { Handshake, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { signInUser } from '@/firebase/auth/authService';
+import { getSellerProfile } from '@/firebase/firestore/sellerService';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
@@ -22,7 +23,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
+export default function SellerLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -39,16 +40,19 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      const user = await signInUser(data.email, data.password);
-      
-      // We will assume a regular user login here.
-      // A more robust system could check the user's role from Firestore after login.
+      const userCredential = await signInUser(data.email, data.password);
+      const sellerProfile = await getSellerProfile(userCredential.uid);
+
+      if (!sellerProfile) {
+        throw new Error("This account is not registered as a seller.");
+      }
+
       toast({
-        title: 'Login Successful',
-        description: 'Welcome back!',
+        title: 'Seller Login Successful',
+        description: 'Welcome back to your dashboard!',
       });
-      router.push('/');
-      router.refresh(); 
+      router.push('/seller/dashboard');
+      router.refresh();
 
     } catch (error: any) {
       toast({
@@ -65,9 +69,9 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center bg-background">
       <Card className="mx-auto w-full max-w-sm">
         <CardHeader className="text-center">
-          <Milk className="mx-auto h-12 w-12 text-primary" />
-          <CardTitle className="mt-4 text-2xl font-bold">Customer Login</CardTitle>
-          <CardDescription>Enter your email below to login to your account</CardDescription>
+          <Handshake className="mx-auto h-12 w-12 text-primary" />
+          <CardTitle className="mt-4 text-2xl font-bold">Seller Login</CardTitle>
+          <CardDescription>Enter your email to access your seller dashboard</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -90,12 +94,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex items-center">
-                       <FormLabel>Password</FormLabel>
-                       <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
-                         Forgot your password?
-                       </Link>
-                     </div>
+                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input type={showPassword ? 'text' : 'password'} {...field} />
@@ -116,20 +115,14 @@ export default function LoginPage() {
                 )}
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+                {isLoading ? 'Logging in...' : 'Login as Seller'}
               </Button>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline">
+            Don&apos;t have a seller account?{' '}
+            <Link href="/sell-with-us" className="underline">
               Sign up
-            </Link>
-          </div>
-           <div className="mt-2 text-center text-sm">
-            Are you a seller?{' '}
-            <Link href="/seller/login" className="underline font-semibold">
-              Seller Login
             </Link>
           </div>
         </CardContent>

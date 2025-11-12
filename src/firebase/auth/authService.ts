@@ -4,27 +4,24 @@ import {
     signInWithEmailAndPassword, 
     signOut,
     updateProfile,
-    type Auth
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase'; // Using the old firebase init for simplicity now
+import { auth } from '@/lib/firebase';
 import { createUserProfile, type UserProfileData } from '@/firebase/firestore/userService';
+import { createSellerProfile, type SellerProfileData } from '@/firebase/firestore/sellerService';
 
 export const signUpUser = async (email: string, password: string, additionalData: UserProfileData) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     
-    // Update Firebase Auth profile
     await updateProfile(user, {
       displayName: additionalData.fullName,
     });
     
-    // Create user profile in Firestore
-    await createUserProfile(user.uid, additionalData);
+    await createUserProfile(user.uid, { ...additionalData, role: 'user' });
     
     return user;
   } catch (error: any) {
-    // Customize error messages for better UX
     if (error.code === 'auth/email-already-in-use') {
       throw new Error('This email address is already in use.');
     }
@@ -34,6 +31,31 @@ export const signUpUser = async (email: string, password: string, additionalData
     throw new Error(error.message);
   }
 };
+
+
+export const signUpSeller = async (email: string, password: string, additionalData: SellerProfileData) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    await updateProfile(user, {
+      displayName: additionalData.fullName,
+    });
+    
+    await createSellerProfile(user.uid, { ...additionalData, role: 'seller' });
+    
+    return user;
+  } catch (error: any) {
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error('This email address is already in use.');
+    }
+    if (error.code === 'auth/weak-password') {
+      throw new Error('The password is too weak.');
+    }
+    throw new Error(error.message);
+  }
+};
+
 
 export const signInUser = async (email: string, password: string) => {
   try {

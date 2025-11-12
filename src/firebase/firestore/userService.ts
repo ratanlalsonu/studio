@@ -1,26 +1,28 @@
 
 import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase'; // Using old firebase init for simplicity
+import { db } from '@/lib/firebase';
 
 export interface UserProfileData {
   fullName: string;
   email: string;
+  role?: 'user';
 }
 
 export interface UserProfile extends UserProfileData {
   uid: string;
+  role: 'user';
   createdAt: {
     seconds: number;
     nanoseconds: number;
-  } | Date; // Firestore timestamp can be an object
+  } | Date;
 }
 
 /**
  * Creates a new user profile document in Firestore.
  * @param uid - The user's unique ID from Firebase Authentication.
- * @param data - The user's profile data (fullName, email).
+ * @param data - The user's profile data (fullName, email, role).
  */
-export const createUserProfile = async (uid: string, data: UserProfileData): Promise<void> => {
+export const createUserProfile = async (uid: string, data: UserProfileData & { role: 'user' }): Promise<void> => {
   const userDocRef = doc(db, 'users', uid);
   await setDoc(userDocRef, {
     ...data,
@@ -40,7 +42,6 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
 
   if (docSnap.exists()) {
     const data = docSnap.data();
-    // Convert Firestore Timestamp to Date if necessary
     if (data.createdAt && typeof data.createdAt.toDate === 'function') {
       data.createdAt = data.createdAt.toDate();
     }
@@ -59,7 +60,6 @@ export const getUsers = async (): Promise<UserProfile[]> => {
     const userSnapshot = await getDocs(usersCol);
     const userList = userSnapshot.docs.map(doc => {
         const data = doc.data();
-        // Convert Firestore Timestamp to Date if necessary
         if (data.createdAt && typeof data.createdAt.toDate === 'function') {
             data.createdAt = data.createdAt.toDate();
         }
@@ -67,6 +67,5 @@ export const getUsers = async (): Promise<UserProfile[]> => {
             ...data
         } as UserProfile;
     });
-    // Sort by creation date, most recent first
     return userList.sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
 };

@@ -76,7 +76,7 @@ export default function SignupPage() {
       <Card className="mx-auto w-full max-w-sm">
         <CardHeader className="text-center">
           <Milk className="mx-auto h-12 w-12 text-primary" />
-          <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
+          <CardTitle className="text-2xl font-bold">Create a Customer Account</CardTitle>
           <CardDescription>Enter your information to create an account with ApnaDairy</CardDescription>
         </CardHeader>
         <CardContent>
