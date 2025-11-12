@@ -7,12 +7,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle2, Package, Truck, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Order } from '@/lib/types';
+import { Order, CartItem } from '@/lib/types';
 import { getOrderById } from '@/lib/firebase-service';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function OrderDetailsDisplay({ order }: { order: Order }) {
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+
+  const getItemTotal = (item: CartItem) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+        itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return itemPrice;
+  }
 
   const trackingSteps = [
     { name: 'Order Placed', icon: CheckCircle2, completed: true },
@@ -66,7 +74,7 @@ function OrderDetailsDisplay({ order }: { order: Order }) {
                 {order.items.map(item => (
                   <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                     <span>{item.name} x {item.quantity}</span>
-                    <span>{formatPrice(item.price * item.quantity)}</span>
+                    <span>{formatPrice(getItemTotal(item))}</span>
                   </div>
                 ))}
               </div>

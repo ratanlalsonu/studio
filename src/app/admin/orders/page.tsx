@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Order } from '@/lib/types';
+import { Order, CartItem } from '@/lib/types';
 import { getOrders } from '@/lib/firebase-service';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
@@ -39,6 +39,14 @@ export default function AdminOrdersPage() {
   }, []);
 
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+  
+  const getItemTotal = (item: CartItem) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+        itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return itemPrice;
+  }
 
   const OrderDetails = ({ order }: { order: Order }) => (
     <div className="grid gap-4 md:grid-cols-2 p-4">
@@ -48,7 +56,7 @@ export default function AdminOrdersPage() {
             {order.items.map(item => (
               <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                 <span>{item.name} <span className="text-muted-foreground">x {item.quantity} {item.unit}</span></span>
-                <span>{formatPrice(item.price * item.quantity)}</span>
+                <span>{formatPrice(getItemTotal(item))}</span>
               </div>
             ))}
         </div>

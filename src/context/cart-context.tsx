@@ -91,7 +91,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [setCartItems]);
 
   const cartCount = cartItems.reduce((count, item) => count + 1, 0);
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  
+  const totalPrice = cartItems.reduce((total, item) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+      itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return total + itemPrice;
+  }, 0);
+
 
   const value = {
       cartItems,

@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { createOrder } from '@/lib/firebase-service';
-import type { ShippingDetails, Order } from '@/lib/types';
+import type { ShippingDetails, Order, CartItem } from '@/lib/types';
 
 export default function CheckoutPage() {
   const { cartItems, totalPrice, clearCart } = useCart();
@@ -55,6 +55,14 @@ export default function CheckoutPage() {
 
   const isAddressValid = () => {
       return Object.values(address).every(field => field.trim() !== '');
+  }
+  
+  const getItemTotal = (item: CartItem) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+        itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return itemPrice;
   }
 
   const handlePlaceOrder = async () => {
@@ -175,7 +183,7 @@ export default function CheckoutPage() {
                 {cartItems.map(item => (
                   <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                     <span className="flex-grow truncate pr-2">{item.name} ({item.quantity} {item.unit})</span>
-                    <span className="flex-shrink-0">{formatPrice(item.price * item.quantity)}</span>
+                    <span className="flex-shrink-0">{formatPrice(getItemTotal(item))}</span>
                   </div>
                 ))}
               </div>

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { useToast } from "@/hooks/use-toast";
 import { addProductBySeller, getProductsBySeller, deleteProduct, getOrdersForSeller } from "@/lib/firebase-service";
-import type { Product, Order } from "@/lib/types";
+import type { Product, Order, CartItem } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -176,9 +176,17 @@ function SellerOrders({ sellerId }: { sellerId: string }) {
 
     const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
+    const getItemTotal = (item: CartItem) => {
+        let itemPrice = item.price * item.quantity;
+        if (item.unit === 'ml' || item.unit === 'g') {
+            itemPrice = (item.price / 1000) * item.quantity;
+        }
+        return itemPrice;
+    }
+
     const OrderDetails = ({ order }: { order: Order }) => {
         const sellerItems = order.items.filter(item => item.sellerId === sellerId);
-        const sellerTotal = sellerItems.reduce((total, item) => total + item.price * item.quantity, 0);
+        const sellerTotal = sellerItems.reduce((total, item) => total + getItemTotal(item), 0);
 
         return (
             <div className="grid gap-4 md:grid-cols-2 p-4 bg-muted/50">
@@ -188,7 +196,7 @@ function SellerOrders({ sellerId }: { sellerId: string }) {
                         {sellerItems.map(item => (
                             <div key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                                 <span>{item.name} <span className="text-muted-foreground">x {item.quantity} {item.unit}</span></span>
-                                <span>{formatPrice(item.price * item.quantity)}</span>
+                                <span>{formatPrice(getItemTotal(item))}</span>
                             </div>
                         ))}
                     </div>
@@ -232,7 +240,7 @@ function SellerOrders({ sellerId }: { sellerId: string }) {
                             <span className="font-medium truncate">#{order.id.slice(0, 8)}</span>
                             <span>{new Date(order.date).toLocaleDateString()}</span>
                             <span><Badge variant={order.status === 'Delivered' ? 'default' : 'secondary'}>{order.status}</Badge></span>
-                            <span className="font-medium text-right">{formatPrice(order.items.filter(i => i.sellerId === sellerId).reduce((t, i) => t + (i.price * i.quantity), 0))}</span>
+                            <span className="font-medium text-right">{formatPrice(order.items.filter(i => i.sellerId === sellerId).reduce((t, i) => t + getItemTotal(i), 0))}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent>
@@ -293,7 +301,7 @@ export default function SellerDashboardPage() {
     }
 
     const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
-    const getUnit = (product: Product) => (product.defaultUnit === 'g' ? 'kg' : product.defaultUnit === 'ml' ? 'litre' : product.defaultUnit);
+    const getUnit = (product: Product) => (product.defaultUnit === 'g' || product.defaultUnit === 'kg') ? 'kg' : 'litre';
 
 
     if (isLoading || !profile) {

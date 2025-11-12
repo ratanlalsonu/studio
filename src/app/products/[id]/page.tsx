@@ -42,21 +42,14 @@ function ProductDisplay({ product }: { product: Product }) {
         return;
     }
 
-    let price = 0;
-    if (unit === 'litre' || unit === 'kg') {
-      price = product.pricePerUnit * quantity;
-    } else if (unit === 'ml' || unit === 'g') {
-      price = (product.pricePerUnit / 1000) * quantity;
-    }
-
     const itemToAdd: CartItem = {
       id: product.id,
       name: product.name,
       image: product.image,
-      quantity,
-      unit,
-      price: price / quantity, // price per single item
-      sellerId: product.sellerId, // Pass sellerId to the cart item
+      quantity: quantity,
+      unit: unit,
+      price: product.pricePerUnit, // Store base price per kg/litre
+      sellerId: product.sellerId,
     };
     addToCart(itemToAdd);
   };
@@ -66,18 +59,16 @@ function ProductDisplay({ product }: { product: Product }) {
   };
 
   const getPrice = () => {
-    let pricePerSelectedUnit = 0;
-     if (unit === 'litre' || unit === 'kg') {
-      pricePerSelectedUnit = product.pricePerUnit;
-    } else if (unit === 'ml' || unit === 'g') {
-      // This is price per ml/g, but quantity is likely to be e.g. 500
-      // For simplicity, let's assume the input is for the base unit (g/ml)
-      pricePerSelectedUnit = product.pricePerUnit / 1000;
+    let price = product.pricePerUnit * quantity;
+    if (unit === 'ml' || unit === 'g') {
+      price = (product.pricePerUnit / 1000) * quantity;
     }
-    return (pricePerSelectedUnit * quantity);
+    return price;
   }
 
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+
+  const baseUnit = (product.defaultUnit === 'g' || product.defaultUnit === 'kg') ? 'kg' : 'litre';
 
   return (
     <div className="grid gap-8 md:grid-cols-2 md:gap-12">
@@ -131,7 +122,7 @@ function ProductDisplay({ product }: { product: Product }) {
                   Total Price: {formatPrice(getPrice())}
               </p>
               <p className="text-sm text-muted-foreground">
-                ({formatPrice(product.pricePerUnit)} / {product.defaultUnit === 'g' ? 'kg' : product.defaultUnit === 'ml' ? 'litre' : product.defaultUnit})
+                ({formatPrice(product.pricePerUnit)} / {baseUnit})
               </p>
           </div>
           

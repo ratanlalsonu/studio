@@ -14,6 +14,14 @@ export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, totalPrice } = useCart();
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
+  const getItemTotal = (item: typeof cartItems[0]) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+        itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return itemPrice;
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="mb-8 text-center font-headline text-4xl font-bold">Your Shopping Cart</h1>
@@ -40,7 +48,7 @@ export default function CartPage() {
                     <p className="text-sm text-muted-foreground">
                       Unit: {item.unit}
                     </p>
-                    <p className="text-sm font-medium">Item Total: {formatPrice(item.price * item.quantity)}</p>
+                    <p className="text-sm font-medium">Item Total: {formatPrice(getItemTotal(item))}</p>
                   </div>
                   <div className="flex items-center gap-2">
                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.id, item.unit, item.quantity - 1)}><Minus className="h-4 w-4" /></Button>

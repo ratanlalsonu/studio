@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Package, Receipt } from 'lucide-react';
-import { Order } from '@/lib/types';
+import { Order, CartItem } from '@/lib/types';
 import { getOrders } from '@/lib/firebase-service'; // Assuming you have a function to get orders
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -16,6 +16,14 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+
+  const getItemTotal = (item: CartItem) => {
+    let itemPrice = item.price * item.quantity;
+    if (item.unit === 'ml' || item.unit === 'g') {
+        itemPrice = (item.price / 1000) * item.quantity;
+    }
+    return itemPrice;
+  }
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -75,7 +83,7 @@ export default function OrdersPage() {
                   {order.items.map(item => (
                     <li key={`${item.id}-${item.unit}`} className="flex justify-between text-sm">
                       <span>{item.name} <span className="text-muted-foreground">x {item.quantity} {item.unit}</span></span>
-                      <span>{formatPrice(item.price * item.quantity)}</span>
+                      <span>{formatPrice(getItemTotal(item))}</span>
                     </li>
                   ))}
                 </ul>
