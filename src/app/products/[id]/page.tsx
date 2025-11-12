@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,13 +19,29 @@ import type { Product, CartItem } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react';
 import { getProductById } from '@/lib/firebase-service';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useUser } from '@/firebase/auth/use-user';
+import { useToast } from '@/hooks/use-toast';
 
 function ProductDisplay({ product }: { product: Product }) {
   const { addToCart } = useCart();
+  const { user } = useUser();
+  const router = useRouter();
+  const { toast } = useToast();
+
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState<'litre' | 'ml' | 'kg' | 'g'>(product.defaultUnit);
   
   const handleAddToCart = () => {
+    if (!user) {
+        toast({
+            title: "Please Login",
+            description: "You need to be logged in to add items to your cart.",
+            variant: "destructive",
+        });
+        router.push('/login');
+        return;
+    }
+
     let price = 0;
     if (unit === 'litre' || unit === 'kg') {
       price = product.pricePerUnit * quantity;
@@ -39,7 +55,7 @@ function ProductDisplay({ product }: { product: Product }) {
       image: product.image,
       quantity,
       unit,
-      price: price / quantity, // price per item
+      price: price / quantity, // price per single item
     };
     addToCart(itemToAdd);
   };
@@ -112,6 +128,9 @@ function ProductDisplay({ product }: { product: Product }) {
           <div className="mt-6">
               <p className="text-2xl font-bold text-primary">
                   Total Price: {formatPrice(getPrice())}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                ({formatPrice(product.pricePerUnit)} / {product.defaultUnit === 'g' ? 'kg' : product.defaultUnit === 'ml' ? 'litre' : product.defaultUnit})
               </p>
           </div>
           

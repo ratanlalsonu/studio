@@ -1,6 +1,7 @@
+
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { CartItem } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -16,22 +17,38 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// A custom hook to manage state that syncs with localStorage
+function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<React.SetStateAction<T>>] {
+    const [value, setValue] = useState<T>(() => {
+        if (typeof window === 'undefined') {
+            return defaultValue;
+        }
+        try {
+            const stickyValue = window.localStorage.getItem(key);
+            return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+        } catch (error) {
+            console.warn(`Error reading localStorage key “${key}”:`, error);
+            return defaultValue;
+        }
+    });
+
+    useEffect(() => {
+        try {
+            window.localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+            console.warn(`Error setting localStorage key “${key}”:`, error);
+        }
+    }, [key, value]);
+
+    return [value, setValue];
+}
+
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useStickyState<CartItem[]>([], 'cartItems');
   const { toast } = useToast();
 
-  useEffect(() => {
-    const storedCart = localStorage.getItem('cartItems');
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const addToCart = (item: CartItem) => {
+  const addToCart = useCallback((item: CartItem) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(i => i.id === item.id && i.unit === item.unit);
       if (existingItem) {
@@ -47,17 +64,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
         title: "Added to cart",
         description: `${item.name} (${item.quantity} ${item.unit}) has been added to your cart.`,
     });
-  };
+  }, [setCartItems, toast]);
 
-  const removeFromCart = (itemId: string, unit: string) => {
+  const removeFromCart = useCallback((itemId: string, unit: string) => {
     setCartItems(prevItems => prevItems.filter(item => !(item.id === itemId && item.unit === unit)));
     toast({
         title: "Removed from cart",
         variant: 'destructive'
     });
-  };
+  }, [setCartItems, toast]);
 
-  const updateQuantity = (itemId: string, unit: string, quantity: number) => {
+  const updateQuantity = useCallback((itemId: string, unit: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(itemId, unit);
     } else {
@@ -67,17 +84,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
         )
       );
     }
-  };
+  }, [setCartItems, removeFromCart]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, [setCartItems]);
 
   const cartCount = cartItems.reduce((count, item) => count + 1, 0);
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  const value = {
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      cartCount,
+      totalPrice
+  }
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartCount, totalPrice }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
