@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
 import { addProduct } from '@/lib/firebase-service';
-import { Product } from '@/lib/types';
+import type { Product } from '@/lib/types';
 
 export default function AddProductPage() {
   const [formState, setFormState] = useState({
@@ -35,7 +35,7 @@ export default function AddProductPage() {
     productCategory: 'other', // Default category
     image: null as File | null,
     units: ['kg', 'g'] as ('litre' | 'ml' | 'kg' | 'g')[],
-    defaultUnit: 'g' as 'litre' | 'ml' | 'kg' | 'g',
+    defaultUnit: 'kg' as 'litre' | 'ml' | 'kg' | 'g',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -96,11 +96,11 @@ export default function AddProductPage() {
         category: formState.productCategory,
       };
 
-      await addProduct(newProductData, formState.image);
+      const docId = await addProduct(newProductData, formState.image);
       
       toast({
         title: "Product Added!",
-        description: `${formState.name} has been successfully added to the store.`,
+        description: `${formState.name} has been successfully added with ID: ${docId}.`,
       });
 
       router.push('/admin/products');
@@ -109,7 +109,7 @@ export default function AddProductPage() {
       console.error("Error adding product: ", error);
       toast({
         title: "Submission Failed",
-        description: "There was an error adding the product. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error adding the product. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -118,8 +118,8 @@ export default function AddProductPage() {
   };
   
   const isFormValid = useMemo(() => {
-    const { image, ...rest } = formState;
-    return Object.values(rest).every(value => value !== '' && value !== null) && image !== null;
+    const { name, description, pricePerUnit, productCategory, image } = formState;
+    return name && description && pricePerUnit && productCategory && image;
   }, [formState]);
 
   return (

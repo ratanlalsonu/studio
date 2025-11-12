@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, ShoppingCart, Users, Package, LogOut, PlusSquare } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Users, Package, LogOut, PlusSquare, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,6 +14,7 @@ const sidebarNavItems = [
   { href: '/admin/add-product', label: 'Add Product', icon: PlusSquare },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/upload-utility', label: 'Upload Utility', icon: Upload },
 ];
 
 export default function AdminLayout({

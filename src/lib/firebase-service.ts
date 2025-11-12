@@ -1,8 +1,9 @@
 
 import { db, storage } from './firebase';
-import { collection, getDocs, addDoc, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import type { Product, Order } from './types';
+import { seedProductData } from './seed-data';
 
 // ==================
 // Product Services
@@ -41,9 +42,9 @@ export const getProductById = async (id: string): Promise<Product | null> => {
  * Adds a new product to Firestore and uploads its image to Storage.
  * @param productData - The product data (without id and image URL).
  * @param imageFile - The image file to upload.
- * @returns A promise that resolves when the operation is complete.
+ * @returns A promise that resolves with the new document's ID.
  */
-export const addProduct = async (productData: Omit<Product, 'id' | 'image'>, imageFile: File) => {
+export const addProduct = async (productData: Omit<Product, 'id' | 'image'>, imageFile: File): Promise<string> => {
   // 1. Upload image to Firebase Storage
   const imageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
   await uploadBytes(imageRef, imageFile);
@@ -53,11 +54,14 @@ export const addProduct = async (productData: Omit<Product, 'id' | 'image'>, ima
 
   // 3. Add the product document to Firestore
   const productsCol = collection(db, 'products');
-  await addDoc(productsCol, {
+  const docRef = await addDoc(productsCol, {
     ...productData,
     image: imageUrl,
   });
+
+  return docRef.id;
 };
+
 
 /**
  * Deletes a product from Firestore and its corresponding image from Storage.
@@ -77,6 +81,7 @@ export const deleteProduct = async (productId: string) => {
     // Delete image from Storage
     if (imageUrl) {
         try {
+            // Create a reference from the full URL
             const imageStorageRef = ref(storage, imageUrl);
             await deleteObject(imageStorageRef);
         } catch (error: any) {
@@ -91,6 +96,29 @@ export const deleteProduct = async (productId: string) => {
     // Delete document from Firestore
     await deleteDoc(productRef);
 }
+
+/**
+ * Seeds the database with initial product data.
+ * Checks for existing products to avoid duplicates.
+ * @returns A promise that resolves with the number of products added.
+ */
+export const seedProducts = async (): Promise<number> => {
+    const productsCol = collection(db, 'products');
+    let productsAddedCount = 0;
+
+    for (const product of seedProductData) {
+        // Check if a product with the same name already exists
+        const q = query(productsCol, where("name", "==", product.name));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            await addDoc(productsCol, product);
+            productsAddedCount++;
+        }
+    }
+    return productsAddedCount;
+}
+
 
 // ==================
 // Order Services
