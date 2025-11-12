@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+  const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
   const getItemTotal = (item: CartItem) => {
     let itemPrice = item.price * item.quantity;

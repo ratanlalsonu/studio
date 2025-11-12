@@ -28,7 +28,6 @@ import Image from "next/image";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 
 function AddProductForm({ sellerId, onProductAdded }: { sellerId: string, onProductAdded: () => void }) {
@@ -174,7 +173,7 @@ function SellerOrders({ sellerId }: { sellerId: string }) {
         fetchOrders();
     }, [sellerId]);
 
-    const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+    const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
     const getItemTotal = (item: CartItem) => {
         let itemPrice = item.price * item.quantity;
@@ -300,7 +299,7 @@ export default function SellerDashboardPage() {
         }
     }
 
-    const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+    const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
     const getUnit = (product: Product) => (product.defaultUnit === 'g' || product.defaultUnit === 'kg') ? 'kg' : 'litre';
 
 

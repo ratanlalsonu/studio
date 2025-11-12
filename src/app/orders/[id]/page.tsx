@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -12,7 +12,7 @@ import { getOrderById } from '@/lib/firebase-service';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function OrderDetailsDisplay({ order }: { order: Order }) {
-  const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+  const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
   const getItemTotal = (item: CartItem) => {
     let itemPrice = item.price * item.quantity;
@@ -104,14 +104,14 @@ function OrderDetailsDisplay({ order }: { order: Order }) {
   );
 }
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
+function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrder = async () => {
       setIsLoading(true);
-      const fetchedOrder = await getOrderById(params.id);
+      const fetchedOrder = await getOrderById(orderId);
       if (!fetchedOrder) {
         notFound();
       }
@@ -120,7 +120,7 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
     };
 
     fetchOrder();
-  }, [params.id]);
+  }, [orderId]);
 
   if (isLoading) {
     return (
@@ -144,9 +144,16 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
     return notFound();
   }
 
+  return <OrderDetailsDisplay order={order} />;
+}
+
+
+export default function OrderDetailPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto px-4 py-12">
-      <OrderDetailsDisplay order={order} />
+      <Suspense fallback={<div>Loading...</div>}>
+         <OrderDetailsPageContent orderId={params.id} />
+      </Suspense>
     </div>
   );
 }
