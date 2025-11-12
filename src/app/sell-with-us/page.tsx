@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,16 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { UploadCloud, Handshake, FileIcon, X } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { Link, Handshake } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -31,7 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { addSellerApplication } from '@/lib/firebase-service';
+import type { SellerApplication } from '@/lib/types';
 
 
 export default function SellerPage() {
@@ -43,9 +37,11 @@ export default function SellerPage() {
     productCategory: '',
     productDescription: '',
     price: '',
-    image: null as File | null,
+    image: '',
   });
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -55,49 +51,54 @@ export default function SellerPage() {
   const handleCategoryChange = (value: string) => {
     setFormState(prevState => ({ ...prevState, productCategory: value }));
   };
+  
+  const isFormValid = useMemo(() => {
+    return Object.values(formState).every(value => value.trim() !== '');
+  }, [formState]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormState(prevState => ({ ...prevState, image: e.target.files![0] }));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+     if (!isFormValid) {
+      toast({ title: "Incomplete Form", description: "Please fill all fields.", variant: "destructive" });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const newApplicationData: Omit<SellerApplication, 'id' | 'status' | 'submittedAt'> = {
+        sellerName: formState.sellerName,
+        sellerContact: formState.sellerContact,
+        sellerPhone: formState.sellerPhone,
+        productName: formState.productName,
+        productCategory: formState.productCategory,
+        productDescription: formState.productDescription,
+        price: Number(formState.price),
+        image: formState.image,
+      };
+
+      await addSellerApplication(newApplicationData);
+      
+      toast({
+        title: "Application Submitted!",
+        description: "Thank you! Our team will review your application and get in touch.",
+      });
+
+      router.push('/');
+
+    } catch (error) {
+      console.error("Error submitting application: ", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "There was an error submitting your application. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const removeImage = () => {
-    setFormState(prevState => ({ ...prevState, image: null }));
-    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
-    if(fileInput) fileInput.value = '';
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, you'd handle the form submission, validation, and image upload here.
-    console.log('Seller Form Submitted:', formState);
-    setShowConfirmation(true);
-  };
-
-  const handleDialogClose = () => {
-    setShowConfirmation(false);
-    // Reset form
-    setFormState({
-        sellerName: '',
-        sellerContact: '',
-        sellerPhone: '',
-        productName: '',
-        productCategory: '',
-        productDescription: '',
-        price: '',
-        image: null,
-    });
-    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
-    if(fileInput) fileInput.value = '';
-  };
-  
-  const isFormValid = useMemo(() => {
-    return Object.values(formState).every(value => value !== '' && value !== null);
-  }, [formState]);
-
   return (
-    <>
       <div className="container mx-auto flex min-h-[80vh] items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-2xl">
           <CardHeader className="text-center">
@@ -164,54 +165,28 @@ export default function SellerPage() {
                 <Label htmlFor="productDescription">Product Description</Label>
                 <Textarea id="productDescription" placeholder="Describe your product's features, quality, and benefits." required onChange={handleInputChange} value={formState.productDescription}/>
               </div>
-               <div className="grid gap-2">
-                 <Label htmlFor="image">Product Image</Label>
-                  {formState.image ? (
-                    <div className="flex items-center justify-between rounded-lg border bg-muted p-2">
-                      <div className="flex items-center gap-2">
-                        <FileIcon className="h-6 w-6 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">{formState.image.name}</span>
-                      </div>
-                      <Button type="button" variant="ghost" size="icon" onClick={removeImage}>
-                        <X className="h-4 w-4" />
-                      </Button>
+              <div className="grid gap-2">
+                <Label htmlFor="image">Product Image URL</Label>
+                <div className="relative">
+                    <Link className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input id="image" type="url" placeholder="https://example.com/image.jpg" required onChange={handleInputChange} value={formState.image} className="pl-10"/>
+                </div>
+                {formState.image && (
+                    <div className="mt-2">
+                        <p className="text-sm text-muted-foreground mb-2">Image Preview:</p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={formState.image} alt="Image Preview" className="rounded-lg object-cover h-32 w-32 border"/>
                     </div>
-                  ) : (
-                    <div className="flex items-center justify-center w-full">
-                        <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-accent">
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
-                                <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-muted-foreground">PNG, JPG, or GIF (MAX. 800x400px)</p>
-                            </div>
-                            <Input id="image-upload" type="file" className="hidden" onChange={handleImageChange} accept="image/png, image/jpeg, image/gif" required />
-                        </label>
-                    </div> 
-                  )}
-              </div>
+                )}
+             </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" size="lg" className="w-full" disabled={!isFormValid}>
-                Submit for Review
+              <Button type="submit" size="lg" className="w-full" disabled={!isFormValid || isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit for Review"}
               </Button>
             </CardFooter>
           </form>
         </Card>
       </div>
-
-      <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Submission Received!</AlertDialogTitle>
-            <AlertDialogDescription>
-              Thank you for submitting your product. Our team will review it and get back to you at {formState.sellerContact} shortly.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={handleDialogClose}>OK</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
   );
 }

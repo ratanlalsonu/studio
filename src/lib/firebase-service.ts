@@ -2,7 +2,7 @@
 import { db, storage } from './firebase';
 import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import type { Product, Order } from './types';
+import type { Product, Order, SellerApplication } from './types';
 import { seedProductData } from './seed-data';
 
 // ==================
@@ -150,3 +150,44 @@ export const getOrderById = async (id: string): Promise<Order | null> => {
         return null;
     }
 }
+
+// ==================
+// Seller Services
+// ==================
+
+/**
+ * Adds a new seller application to the 'sellerApplications' collection in Firestore.
+ * @param applicationData - The seller application data.
+ * @returns A promise that resolves with the new document's ID.
+ */
+export const addSellerApplication = async (applicationData: Omit<SellerApplication, 'id' | 'status' | 'submittedAt'>): Promise<string> => {
+  const sellerAppsCol = collection(db, 'sellerApplications');
+  const docRef = await addDoc(sellerAppsCol, {
+    ...applicationData,
+    status: 'pending',
+    submittedAt: new Date(),
+  });
+  return docRef.id;
+};
+
+/**
+ * Fetches all seller applications from the Firestore 'sellerApplications' collection.
+ * @returns A promise that resolves to an array of seller applications.
+ */
+export const getSellerApplications = async (): Promise<SellerApplication[]> => {
+  const sellerAppsCol = collection(db, 'sellerApplications');
+  const appSnapshot = await getDocs(sellerAppsCol);
+  const appList = appSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // Convert Firestore Timestamp to Date if necessary
+    if (data.submittedAt && typeof data.submittedAt.toDate === 'function') {
+        data.submittedAt = data.submittedAt.toDate();
+    }
+    return {
+        id: doc.id,
+        ...data
+    } as SellerApplication;
+  });
+  // Sort by submission date, most recent first
+  return appList.sort((a, b) => new Date(b.submittedAt as Date).getTime() - new Date(a.submittedAt as Date).getTime());
+};

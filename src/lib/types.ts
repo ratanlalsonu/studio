@@ -37,3 +37,17 @@ export type Order = {
   shippingDetails: ShippingDetails;
   paymentMethod: string;
 };
+
+export type SellerApplication = {
+  id: string;
+  sellerName: string;
+  sellerContact: string;
+  sellerPhone: string;
+  productName: string;
+  productCategory: string;
+  productDescription: string;
+  price: number;
+  image: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string | Date; // ISO 8601 format or Date object
+};
