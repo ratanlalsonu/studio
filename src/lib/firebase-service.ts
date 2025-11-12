@@ -39,26 +39,13 @@ export const getProductById = async (id: string): Promise<Product | null> => {
 }
 
 /**
- * Adds a new product to Firestore and uploads its image to Storage.
- * @param productData - The product data (without id and image URL).
- * @param imageFile - The image file to upload.
+ * Adds a new product to Firestore using a direct image URL.
+ * @param productData - The complete product data, including the image URL.
  * @returns A promise that resolves with the new document's ID.
  */
-export const addProduct = async (productData: Omit<Product, 'id' | 'image'>, imageFile: File): Promise<string> => {
-  // 1. Upload image to Firebase Storage
-  const imageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
-  await uploadBytes(imageRef, imageFile);
-
-  // 2. Get the download URL
-  const imageUrl = await getDownloadURL(imageRef);
-
-  // 3. Add the product document to Firestore
+export const addProduct = async (productData: Omit<Product, 'id'>): Promise<string> => {
   const productsCol = collection(db, 'products');
-  const docRef = await addDoc(productsCol, {
-    ...productData,
-    image: imageUrl,
-  });
-
+  const docRef = await addDoc(productsCol, productData);
   return docRef.id;
 };
 
@@ -78,8 +65,8 @@ export const deleteProduct = async (productId: string) => {
     const product = productSnap.data() as Product;
     const imageUrl = product.image;
 
-    // Delete image from Storage
-    if (imageUrl) {
+    // Delete image from Storage only if it's a Firebase Storage URL
+    if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
         try {
             // Create a reference from the full URL
             const imageStorageRef = ref(storage, imageUrl);

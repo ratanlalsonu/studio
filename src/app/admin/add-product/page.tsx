@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { UploadCloud, Handshake, FileIcon, X } from 'lucide-react';
+import { Link, Handshake } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -33,7 +33,7 @@ export default function AddProductPage() {
     description: '',
     pricePerUnit: '',
     productCategory: 'other', // Default category
-    image: null as File | null,
+    image: '', // Changed to string for URL
     units: ['kg', 'g'] as ('litre' | 'ml' | 'kg' | 'g')[],
     defaultUnit: 'kg' as 'litre' | 'ml' | 'kg' | 'g',
   });
@@ -56,27 +56,6 @@ export default function AddProductPage() {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if(file.size > 2 * 1024 * 1024){
-        toast({
-          title: "Image too large",
-          description: "Please upload an image smaller than 2MB.",
-          variant: "destructive"
-        });
-        return;
-      }
-      setFormState(prevState => ({ ...prevState, image: file }));
-    }
-  };
-
-  const removeImage = () => {
-    setFormState(prevState => ({ ...prevState, image: null }));
-    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
-    if(fileInput) fileInput.value = '';
-  }
-
   const isFormValid = useMemo(() => {
     const { name, description, pricePerUnit, productCategory, image } = formState;
     return name && description && pricePerUnit && productCategory && image;
@@ -85,24 +64,25 @@ export default function AddProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid || !formState.image) {
-      toast({ title: "Incomplete Form", description: "Please fill all fields and upload an image.", variant: "destructive" });
+    if (!isFormValid) {
+      toast({ title: "Incomplete Form", description: "Please fill all fields, including the image URL.", variant: "destructive" });
       return;
     }
     
     setIsSubmitting(true);
     
     try {
-      const newProductData: Omit<Product, 'id' | 'image'> = {
+      const newProductData: Omit<Product, 'id'> = {
         name: formState.name,
         description: formState.description,
         pricePerUnit: Number(formState.pricePerUnit),
         units: formState.units,
         defaultUnit: formState.defaultUnit,
         category: formState.productCategory,
+        image: formState.image,
       };
 
-      const docId = await addProduct(newProductData, formState.image);
+      const docId = await addProduct(newProductData);
       
       toast({
         title: "Product Added!",
@@ -169,30 +149,19 @@ export default function AddProductPage() {
             <Textarea id="description" placeholder="Describe your product's features, quality, and benefits." required onChange={handleInputChange} value={formState.description}/>
           </div>
           
-           <div className="grid gap-2">
-             <Label htmlFor="image-upload">Product Image</Label>
-              {formState.image ? (
-                <div className="flex items-center justify-between rounded-lg border bg-muted p-2">
-                  <div className="flex items-center gap-2">
-                    <FileIcon className="h-6 w-6 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">{formState.image.name}</span>
-                  </div>
-                  <Button type="button" variant="ghost" size="icon" onClick={removeImage}>
-                    <X className="h-4 w-4" />
-                  </Button>
+          <div className="grid gap-2">
+             <Label htmlFor="image">Product Image URL</Label>
+             <div className="relative">
+                <Link className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input id="image" type="url" placeholder="https://example.com/image.jpg" required onChange={handleInputChange} value={formState.image} className="pl-10"/>
+             </div>
+             {formState.image && (
+                <div className="mt-2">
+                    <p className="text-sm text-muted-foreground mb-2">Image Preview:</p>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={formState.image} alt="Image Preview" className="rounded-lg object-cover h-32 w-32 border"/>
                 </div>
-              ) : (
-                <div className="flex items-center justify-center w-full">
-                    <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-accent">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <UploadCloud className="w-10 h-10 mb-3 text-muted-foreground" />
-                            <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p className="text-xs text-muted-foreground">PNG, JPG, or GIF (MAX. 2MB)</p>
-                        </div>
-                        <Input id="image-upload" type="file" className="hidden" onChange={handleImageChange} accept="image/png, image/jpeg, image/gif" required />
-                    </label>
-                </div> 
-              )}
+             )}
           </div>
         </CardContent>
         <CardFooter>
