@@ -13,39 +13,44 @@ interface CartContextType {
   clearCart: () => void;
   cartCount: number;
   totalPrice: number;
+  isCartReady: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 // A custom hook to manage state that syncs with localStorage
-function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<React.SetStateAction<T>>] {
-    const [value, setValue] = useState<T>(() => {
-        if (typeof window === 'undefined') {
-            return defaultValue;
-        }
-        try {
-            const stickyValue = window.localStorage.getItem(key);
-            return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
-        } catch (error) {
-            console.warn(`Error reading localStorage key “${key}”:`, error);
-            return defaultValue;
-        }
-    });
+function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<React.SetStateAction<T>>, boolean] {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [value, setValue] = useState<T>(defaultValue);
 
     useEffect(() => {
         try {
-            window.localStorage.setItem(key, JSON.stringify(value));
+            const stickyValue = window.localStorage.getItem(key);
+            if (stickyValue !== null) {
+                setValue(JSON.parse(stickyValue));
+            }
         } catch (error) {
-            console.warn(`Error setting localStorage key “${key}”:`, error);
+            console.warn(`Error reading localStorage key “${key}”:`, error);
         }
-    }, [key, value]);
+        setIsLoaded(true);
+    }, [key]);
 
-    return [value, setValue];
+    useEffect(() => {
+        if (isLoaded) {
+            try {
+                window.localStorage.setItem(key, JSON.stringify(value));
+            } catch (error) {
+                console.warn(`Error setting localStorage key “${key}”:`, error);
+            }
+        }
+    }, [key, value, isLoaded]);
+
+    return [value, setValue, isLoaded];
 }
 
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useStickyState<CartItem[]>([], 'cartItems');
+  const [cartItems, setCartItems, isCartReady] = useStickyState<CartItem[]>([], 'cartItems');
   const { toast } = useToast();
 
   const addToCart = useCallback((item: CartItem) => {
@@ -108,7 +113,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       updateQuantity,
       clearCart,
       cartCount,
-      totalPrice
+      totalPrice,
+      isCartReady,
   }
 
   return (

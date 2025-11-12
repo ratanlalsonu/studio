@@ -7,20 +7,6 @@ import { Milk, Phone, Mail, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Footer() {
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const handleAdminClick = () => {
-    const secret = prompt("Please enter the admin secret key:");
-    if (secret === "APNADAIRY@RATAN") {
-      sessionStorage.setItem('admin-authenticated', 'true');
-      toast({ title: "Success", description: "Redirecting to admin panel..." });
-      router.push('/admin');
-    } else if (secret !== null) { // Only show error if user entered something
-      toast({ variant: 'destructive', title: "Access Denied", description: "Incorrect secret key." });
-    }
-  };
-
   return (
     <footer className="bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-4 py-12">
@@ -95,9 +81,6 @@ export default function Footer() {
             </div>
             <div className="mt-8 text-center text-sm text-secondary-foreground/80">
               <p>&copy; {new Date().getFullYear()} ApnaDairy Online. All rights reserved.</p>
-              <p className="mt-2">
-                <button onClick={handleAdminClick} className="text-xs hover:text-primary transition-colors underline">Admin Panel</button>
-              </p>
             </div>
         </div>
 

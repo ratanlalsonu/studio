@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Milk, ShoppingCart, Menu, Search, LogOut, Handshake, User as UserIcon, Package, HelpCircle } from 'lucide-react';
+import { Milk, ShoppingCart, Menu, Search, LogOut, Handshake, User as UserIcon, Package, HelpCircle, ShieldCheck } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -33,8 +33,8 @@ import {
 const navItems = [
   { href: '/', label: 'Home', icon: null },
   { href: '/products', label: 'Products', icon: null },
-  { href: '/orders', label: 'Track Order', icon: Package },
-  { href: '/query', label: 'Query', icon: HelpCircle },
+  { href: '/orders', label: 'My Orders', icon: Package },
+  { href: '/query', label: 'Contact Us', icon: HelpCircle },
 ];
 
 const userNavItems = [
@@ -47,7 +47,7 @@ const sellerNavItems = [
 
 
 export default function Header() {
-  const { cartCount } = useCart();
+  const { cartCount, isCartReady } = useCart();
   const isMobile = useIsMobile();
   const [showSearch, setShowSearch] = useState(false);
   const { toast } = useToast();
@@ -63,6 +63,17 @@ export default function Header() {
       router.refresh();
     } catch (error: any) {
       toast({ variant: 'destructive', title: 'Logout Failed', description: error.message });
+    }
+  };
+
+  const handleAdminClick = () => {
+    const secret = prompt("Please enter the admin secret key:");
+    if (secret === "APNADAIRY@RATAN") {
+      sessionStorage.setItem('admin-authenticated', 'true');
+      toast({ title: "Success", description: "Redirecting to admin panel..." });
+      router.push('/admin');
+    } else if (secret !== null) { // Only show error if user entered something
+      toast({ variant: 'destructive', title: "Access Denied", description: "Incorrect secret key." });
     }
   };
 
@@ -207,17 +218,22 @@ export default function Header() {
      <DropdownMenu>
         <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
-                <UserIcon className="mr-2"/> Login
+                <UserIcon className="mr-2 h-4 w-4"/> Login
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel>Are you a...</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <Link href="/login"><UserIcon className="mr-2"/>Customer</Link>
+                <Link href="/login"><UserIcon className="mr-2 h-4 w-4"/>Customer</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-                <Link href="/seller/login"><Handshake className="mr-2"/>Seller</Link>
+                <Link href="/seller/login"><Handshake className="mr-2 h-4 w-4"/>Seller</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleAdminClick}>
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              <span>Admin Login</span>
             </DropdownMenuItem>
         </DropdownMenuContent>
      </DropdownMenu>
@@ -247,7 +263,7 @@ export default function Header() {
               <Button asChild variant="ghost" size="icon" className="transition-colors">
                 <Link href="/cart">
                   <ShoppingCart />
-                  {cartCount > 0 && (
+                  {isCartReady && cartCount > 0 && (
                     <Badge className="absolute right-0 top-0 -mr-1 -mt-1 h-5 w-5 justify-center rounded-full p-0">
                       {cartCount}
                     </Badge>
