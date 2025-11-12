@@ -10,7 +10,7 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const priceDisplay = `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)}`;
+  const priceDisplay = `Rs. ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)}`;
   const unitDisplay = (product.defaultUnit === 'g' || product.defaultUnit === 'kg') ? 'kg' : 'litre';
   
   return (

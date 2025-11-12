@@ -29,6 +29,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 function AddProductForm({ sellerId, onProductAdded }: { sellerId: string, onProductAdded: () => void }) {
   const [formState, setFormState] = useState({
@@ -173,7 +174,7 @@ function SellerOrders({ sellerId }: { sellerId: string }) {
         fetchOrders();
     }, [sellerId]);
 
-    const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+    const formatPrice = (price: number) => `Rs. ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
     const getItemTotal = (item: CartItem) => {
         let itemPrice = item.price * item.quantity;
@@ -299,7 +300,7 @@ export default function SellerDashboardPage() {
         }
     }
 
-    const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+    const formatPrice = (price: number) => `Rs. ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
     const getUnit = (product: Product) => (product.defaultUnit === 'g' || product.defaultUnit === 'kg') ? 'kg' : 'litre';
 
 

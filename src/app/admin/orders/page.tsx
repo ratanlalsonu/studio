@@ -38,7 +38,7 @@ export default function AdminOrdersPage() {
     fetchOrders();
   }, []);
 
-  const formatPrice = (price: number) => `Rupees ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+  const formatPrice = (price: number) => `Rs. ${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
   
   const getItemTotal = (item: CartItem) => {
     let itemPrice = item.price * item.quantity;

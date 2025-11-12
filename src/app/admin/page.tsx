@@ -15,7 +15,7 @@ export default function AdminDashboardPage() {
           <CardTitle className="text-sm font-medium">
             Total Revenue
           </CardTitle>
-          <span className="text-muted-foreground">Rupees</span>
+          <span className="text-muted-foreground">Rs.</span>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">45,231.89</div>
