@@ -198,3 +198,16 @@ export const getOrderById = async (id: string): Promise<Order | null> => {
         return null;
     }
 }
+
+/**
+ * Fetches orders that contain products from a specific seller.
+ * @param sellerId The UID of the seller.
+ * @returns A promise that resolves to an array of relevant orders.
+ */
+export const getOrdersForSeller = async (sellerId: string): Promise<Order[]> => {
+    const allOrders = await getOrders();
+    const sellerOrders = allOrders.filter(order => 
+        order.items.some(item => item.sellerId === sellerId)
+    );
+    return sellerOrders;
+};

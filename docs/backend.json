@@ -58,6 +58,46 @@
         "category": { "type": "string" }
       },
       "required": ["sellerId", "name", "pricePerUnit", "units", "defaultUnit", "image", "category"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Represents a customer's order containing items, shipping details, and status.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["Processing", "Shipped", "Delivered", "Cancelled"] },
+        "items": { 
+          "type": "array", 
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "image": { "type": "string", "format": "uri" },
+              "quantity": { "type": "number" },
+              "unit": { "type": "string" },
+              "price": { "type": "number" },
+              "sellerId": { "type": "string" }
+            },
+            "required": ["id", "name", "image", "quantity", "unit", "price"]
+          }
+        },
+        "total": { "type": "number" },
+        "shippingDetails": {
+          "type": "object",
+          "properties": {
+            "fullName": { "type": "string" },
+            "phone": { "type": "string" },
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "pincode": { "type": "string" }
+          },
+          "required": ["fullName", "phone", "street", "city", "state", "pincode"]
+        },
+        "paymentMethod": { "type": "string" }
+      },
+      "required": ["date", "status", "items", "total", "shippingDetails", "paymentMethod"]
     }
   },
   "auth": {
@@ -79,6 +119,10 @@
     "/sellerProducts/{productId}": {
       "schema": { "$ref": "#/entities/SellerProduct" },
       "description": "Stores products added by individual sellers."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Stores customer order information."
     }
   }
 }

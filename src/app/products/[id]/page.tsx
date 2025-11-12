@@ -56,6 +56,7 @@ function ProductDisplay({ product }: { product: Product }) {
       quantity,
       unit,
       price: price / quantity, // price per single item
+      sellerId: product.sellerId, // Pass sellerId to the cart item
     };
     addToCart(itemToAdd);
   };

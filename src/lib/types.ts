@@ -18,6 +18,7 @@ export type CartItem = {
   quantity: number;
   unit: 'litre' | 'ml' | 'kg' | 'g';
   price: number; // This is price per single unit (e.g. price for 1 litre or 1 g)
+  sellerId?: string;
 };
 
 export type ShippingDetails = {
