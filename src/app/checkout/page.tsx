@@ -24,11 +24,13 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { createOrder } from '@/lib/firebase-service';
+import type { ShippingDetails, Order } from '@/lib/types';
 
 export default function CheckoutPage() {
   const { cartItems, totalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [address, setAddress] = useState({
+  const [address, setAddress] = useState<ShippingDetails>({
       fullName: '',
       phone: '',
       street: '',
@@ -36,12 +38,12 @@ export default function CheckoutPage() {
       state: '',
       pincode: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
+  const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
   if (cartItems.length === 0) {
-    // Redirect to home or products if cart is empty
     if(typeof window !== "undefined") router.push('/products');
     return null;
   }
@@ -55,7 +57,7 @@ export default function CheckoutPage() {
       return Object.values(address).every(field => field.trim() !== '');
   }
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!isAddressValid()) {
         toast({
             title: "Incomplete Address",
@@ -64,15 +66,36 @@ export default function CheckoutPage() {
         });
         return;
     }
-    // In a real app, this would submit the order to the backend.
-    // Here, we just show a success message and clear the cart.
-    clearCart();
-    toast({
-      title: "Order Confirmed!",
-      description: "Your order has been placed successfully. You can track it in the 'My Orders' section.",
-    });
-    // TODO: Actually create the order and save it.
-    router.push('/orders');
+
+    setIsSubmitting(true);
+
+    const newOrder: Omit<Order, 'id'> = {
+        date: new Date().toISOString(),
+        status: 'Processing',
+        items: cartItems,
+        total: totalPrice,
+        shippingDetails: address,
+        paymentMethod: paymentMethod,
+    };
+
+    try {
+        const orderId = await createOrder(newOrder);
+        clearCart();
+        toast({
+            title: "Order Confirmed!",
+            description: "Your order has been placed successfully. You can track it in the 'My Orders' section.",
+        });
+        router.push(`/orders/${orderId}`);
+    } catch (error) {
+        console.error("Failed to create order:", error);
+        toast({
+            title: "Order Failed",
+            description: "There was a problem placing your order. Please try again.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -164,7 +187,9 @@ export default function CheckoutPage() {
               
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button size="lg" className="mt-6 w-full">Place Order</Button>
+                  <Button size="lg" className="mt-6 w-full" disabled={isSubmitting || !isAddressValid()}>
+                    {isSubmitting ? 'Placing Order...' : 'Place Order'}
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -175,7 +200,7 @@ export default function CheckoutPage() {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handlePlaceOrder}>Confirm Order</AlertDialogAction>
+                    <AlertDialogAction onClick={handlePlaceOrder} disabled={isSubmitting}>Confirm Order</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>

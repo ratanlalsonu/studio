@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -11,7 +12,7 @@ import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, totalPrice } = useCart();
-  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
+  const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -37,7 +38,7 @@ export default function CartPage() {
                   <div className="flex-grow">
                     <h3 className="font-semibold">{item.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Price: {formatPrice((item.price * 1000) / (item.unit === 'ml' || item.unit === 'g' ? 1 : 1000))} per {item.unit.replace('ml', 'litre').replace('g', 'kg')}
+                      Unit: {item.unit}
                     </p>
                     <p className="text-sm font-medium">Item Total: {formatPrice(item.price * item.quantity)}</p>
                   </div>

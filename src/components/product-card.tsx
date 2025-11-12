@@ -1,18 +1,17 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 type ProductCardProps = {
   product: Product;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const imagePlaceholder = PlaceHolderImages.find((img) => img.id === product.id);
-  const priceDisplay = `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)} Rupees`;
-  const unitDisplay = product.defaultUnit === 'g' ? 'kg' : product.defaultUnit;
+  const priceDisplay = `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)}`;
+  const unitDisplay = (product.defaultUnit === 'g' || product.defaultUnit === 'ml') ? (product.defaultUnit === 'g' ? 'kg' : 'litre') : product.defaultUnit;
   
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg">
@@ -25,7 +24,6 @@ export default function ProductCard({ product }: ProductCardProps) {
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              data-ai-hint={imagePlaceholder?.imageHint || ''}
             />
           </div>
         </Link>

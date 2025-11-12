@@ -1,17 +1,18 @@
+
+"use client";
+
+import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
-import { orders } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle2, Package, Truck, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Order } from '@/lib/types';
+import { getOrderById } from '@/lib/firebase-service';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
-  const order = orders.find((o) => o.id === params.id);
-  const formatPrice = (price: number) => `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)} Rupees`;
-
-  if (!order) {
-    notFound();
-  }
+function OrderDetailsDisplay({ order }: { order: Order }) {
+  const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
 
   const trackingSteps = [
     { name: 'Order Placed', icon: CheckCircle2, completed: true },
@@ -21,9 +22,9 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
   ];
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <>
       <h1 className="mb-4 font-headline text-3xl font-bold">Order Details</h1>
-      <p className="mb-8 text-muted-foreground">Order #{order.id} &bull; Placed on {new Date(order.date).toLocaleDateString()}</p>
+      <p className="mb-8 text-muted-foreground">Order #{order.id.slice(0, 8)} &bull; Placed on {new Date(order.date).toLocaleDateString()}</p>
       
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
@@ -55,7 +56,7 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
           </Card>
         </div>
         
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle>Order Summary</CardTitle>
@@ -76,8 +77,68 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
               </div>
             </CardContent>
           </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle>Shipping Address</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="text-sm text-muted-foreground">
+                    <p className="font-semibold text-foreground">{order.shippingDetails.fullName}</p>
+                    <p>{order.shippingDetails.street}</p>
+                    <p>{order.shippingDetails.city}, {order.shippingDetails.state} - {order.shippingDetails.pincode}</p>
+                    <p>Phone: {order.shippingDetails.phone}</p>
+                </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
+    </>
+  );
+}
+
+export default function OrderDetailPage({ params }: { params: { id: string } }) {
+  const [order, setOrder] = useState<Order | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      setIsLoading(true);
+      const fetchedOrder = await getOrderById(params.id);
+      if (!fetchedOrder) {
+        notFound();
+      }
+      setOrder(fetchedOrder);
+      setIsLoading(false);
+    };
+
+    fetchOrder();
+  }, [params.id]);
+
+  if (isLoading) {
+    return (
+        <div className="container mx-auto px-4 py-12">
+            <Skeleton className="h-8 w-1/2 mb-4" />
+            <Skeleton className="h-6 w-1/3 mb-8" />
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div className="lg:col-span-2">
+                    <Skeleton className="h-64 w-full" />
+                </div>
+                <div className="lg:col-span-1 space-y-8">
+                    <Skeleton className="h-48 w-full" />
+                    <Skeleton className="h-32 w-full" />
+                </div>
+            </div>
+        </div>
+    );
+  }
+
+  if (!order) {
+    return notFound();
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <OrderDetailsDisplay order={order} />
     </div>
   );
 }

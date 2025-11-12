@@ -1,14 +1,31 @@
+
+"use client";
+
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { products } from '@/lib/data';
 import Link from 'next/link';
 import ProductCard from '@/components/product-card';
 import { Leaf, Award, Truck } from 'lucide-react';
 import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useEffect, useState } from 'react';
+import type { Product } from '@/lib/types';
+import { getProducts } from '@/lib/firebase-service';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
   const heroData = PlaceHolderImages.find((img) => img.id === 'hero');
-  const featuredProducts = products.slice(0, 4);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      const allProducts = await getProducts();
+      setFeaturedProducts(allProducts.slice(0, 4));
+      setIsLoading(false);
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -93,11 +110,17 @@ export default function Home() {
           <h2 className="mb-8 text-center font-headline text-3xl font-bold">
             Our Popular Products
           </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-96 w-full" />)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
           <div className="mt-12 text-center">
             <Button asChild variant="outline">
               <Link href="/products">View All Products</Link>

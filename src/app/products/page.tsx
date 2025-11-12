@@ -1,19 +1,42 @@
-import { products } from '@/lib/data';
+
+"use client";
+
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/product-card';
 import { SearchX } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { getProducts } from '@/lib/firebase-service';
+import type { Product } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function ProductsPage({
-  searchParams,
-}: {
-  searchParams?: { q?: string };
-}) {
-  const searchQuery = searchParams?.q || '';
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+function ProductsContent() {
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      const fetchedProducts = await getProducts();
+      setProducts(fetchedProducts);
+      setIsLoading(false);
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const filtered = products.filter(product => 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, products]);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -21,7 +44,11 @@ export default function ProductsPage({
         {searchQuery ? `Searching for "${searchQuery}"` : 'Our Products'}
       </h1>
 
-      {filteredProducts.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => <Skeleton key={i} className="h-96 w-full" />)}
+        </div>
+      ) : filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -37,5 +64,13 @@ export default function ProductsPage({
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }

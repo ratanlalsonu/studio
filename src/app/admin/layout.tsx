@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, ShoppingCart, Users, Package, BarChart, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Users, Package, LogOut, PlusSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,9 +11,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 const sidebarNavItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/add-product', label: 'Add Product', icon: PlusSquare },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/customers', label: 'Customers', icon: Users },
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart },
 ];
 
 export default function AdminLayout({
