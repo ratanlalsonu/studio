@@ -178,16 +178,12 @@ export default function Header() {
 
     return (
       <div className="flex items-center space-x-2">
-        <Link href="/login" passHref legacyBehavior>
-          <a className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'transition-colors')}>
-            Login
-          </a>
-        </Link>
-        <Link href="/signup" passHref legacyBehavior>
-          <a className={cn(buttonVariants({ size: 'sm' }), 'transition-transform duration-200 hover:scale-105')}>
-            Sign Up
-          </a>
-        </Link>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/login">Login</Link>
+        </Button>
+        <Button asChild size="sm">
+          <Link href="/signup">Sign Up</Link>
+        </Button>
       </div>
     );
   };
