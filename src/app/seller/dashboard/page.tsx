@@ -22,10 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Link } from "lucide-react";
+import { Link as LinkIcon, Pencil, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Image from "next/image";
-import { Pencil, Trash2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 function AddProductForm({ sellerId, onProductAdded }: { sellerId: string, onProductAdded: () => void }) {
@@ -100,8 +99,8 @@ function AddProductForm({ sellerId, onProductAdded }: { sellerId: string, onProd
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <DialogContent className="sm:max-w-[625px]">
+    <DialogContent className="sm:max-w-[625px]">
+      <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle>Add a New Product</DialogTitle>
           <DialogDescription>Fill out the form to list a new product in your store.</DialogDescription>
@@ -139,21 +138,21 @@ function AddProductForm({ sellerId, onProductAdded }: { sellerId: string, onProd
           <div className="grid gap-2">
             <Label htmlFor="image">Product Image URL</Label>
             <div className="relative">
-              <Link className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <LinkIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input id="image" type="url" placeholder="https://example.com/image.jpg" required onChange={handleInputChange} value={formState.image} className="pl-10"/>
             </div>
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" type="button">Cancel</Button>
           </DialogClose>
           <Button type="submit" disabled={!isFormValid || isSubmitting}>
             {isSubmitting ? "Adding..." : "Add Product"}
           </Button>
         </DialogFooter>
-      </DialogContent>
-    </form>
+      </form>
+    </DialogContent>
   )
 }
 
@@ -292,3 +291,5 @@ export default function SellerDashboardPage() {
         </Dialog>
     );
 }
+
+    
