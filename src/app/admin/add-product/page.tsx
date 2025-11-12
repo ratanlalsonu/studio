@@ -77,6 +77,12 @@ export default function AddProductPage() {
     if(fileInput) fileInput.value = '';
   }
 
+  const isFormValid = useMemo(() => {
+    const { name, description, pricePerUnit, productCategory, image } = formState;
+    return name && description && pricePerUnit && productCategory && image;
+  }, [formState]);
+  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid || !formState.image) {
@@ -100,7 +106,7 @@ export default function AddProductPage() {
       
       toast({
         title: "Product Added!",
-        description: `${formState.name} has been successfully added with ID: ${docId}.`,
+        description: `${formState.name} has been successfully added.`,
       });
 
       router.push('/admin/products');
@@ -117,10 +123,6 @@ export default function AddProductPage() {
     }
   };
   
-  const isFormValid = useMemo(() => {
-    const { name, description, pricePerUnit, productCategory, image } = formState;
-    return name && description && pricePerUnit && productCategory && image;
-  }, [formState]);
 
   return (
     <Card className="w-full">
