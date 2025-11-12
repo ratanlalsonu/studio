@@ -74,6 +74,8 @@ export default function AdminProductsPage() {
   }
 
   const formatPrice = (price: number) => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(price)}`;
+  const getUnit = (product: Product) => (product.defaultUnit === 'g' ? 'kg' : product.defaultUnit === 'ml' ? 'litre' : product.defaultUnit);
+
 
   return (
     <Card>
@@ -127,7 +129,7 @@ export default function AdminProductsPage() {
                   </TableCell>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
-                  <TableCell>{formatPrice(product.pricePerUnit)} / {product.defaultUnit}</TableCell>
+                  <TableCell>{formatPrice(product.pricePerUnit)} / {getUnit(product)}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button variant="outline" size="icon" disabled>

@@ -11,7 +11,7 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const priceDisplay = `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.pricePerUnit)}`;
-  const unitDisplay = (product.defaultUnit === 'g' || product.defaultUnit === 'ml') ? (product.defaultUnit === 'g' ? 'kg' : 'litre') : product.defaultUnit;
+  const unitDisplay = (product.defaultUnit === 'g' ? 'kg' : product.defaultUnit === 'ml' ? 'litre' : product.defaultUnit);
   
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg">

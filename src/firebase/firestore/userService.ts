@@ -1,5 +1,5 @@
 
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Using old firebase init for simplicity
 
 export interface UserProfileData {
@@ -9,7 +9,10 @@ export interface UserProfileData {
 
 export interface UserProfile extends UserProfileData {
   uid: string;
-  createdAt: Date;
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  } | Date; // Firestore timestamp can be an object
 }
 
 /**
@@ -36,8 +39,34 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
   const docSnap = await getDoc(userDocRef);
 
   if (docSnap.exists()) {
-    return docSnap.data() as UserProfile;
+    const data = docSnap.data();
+    // Convert Firestore Timestamp to Date if necessary
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate();
+    }
+    return data as UserProfile;
   } else {
     return null;
   }
+};
+
+/**
+ * Fetches all user profiles from the Firestore 'users' collection.
+ * @returns A promise that resolves to an array of user profiles.
+ */
+export const getUsers = async (): Promise<UserProfile[]> => {
+    const usersCol = collection(db, 'users');
+    const userSnapshot = await getDocs(usersCol);
+    const userList = userSnapshot.docs.map(doc => {
+        const data = doc.data();
+        // Convert Firestore Timestamp to Date if necessary
+        if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+            data.createdAt = data.createdAt.toDate();
+        }
+        return {
+            ...data
+        } as UserProfile;
+    });
+    // Sort by creation date, most recent first
+    return userList.sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
 };
