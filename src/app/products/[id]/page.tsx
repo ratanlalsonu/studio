@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, use } from 'react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -135,14 +135,14 @@ function ProductDisplay({ product }: { product: Product }) {
   );
 }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+function ProductPageContent({ productId }: { productId: string }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
-      const fetchedProduct = await getProductById(params.id);
+      const fetchedProduct = await getProductById(productId);
       if (!fetchedProduct) {
         notFound();
       }
@@ -151,11 +151,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     };
 
     fetchProduct();
-  }, [params.id]);
+  }, [productId]);
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-2 md:gap-12">
           <Skeleton className="aspect-square w-full rounded-lg" />
           <div className="space-y-6">
@@ -165,17 +164,33 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <Skeleton className="h-12 w-full" />
           </div>
         </div>
-      </div>
     );
   }
 
   if (!product) {
     return notFound();
   }
+  
+  return <ProductDisplay product={product} />
+}
 
+
+export default function ProductPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto px-4 py-12">
-      <ProductDisplay product={product} />
+      <Suspense fallback={
+         <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+          <Skeleton className="aspect-square w-full rounded-lg" />
+          <div className="space-y-6">
+            <Skeleton className="h-10 w-3/4" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        </div>
+      }>
+        <ProductPageContent productId={params.id} />
+      </Suspense>
     </div>
   );
 }
