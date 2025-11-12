@@ -41,7 +41,7 @@ export default function Footer() {
             <h3 className="font-headline text-lg font-bold">Services</h3>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/products" className="text-secondary-foreground/80 hover:text-primary transition-colors">All Products</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Subscription Plans</Link></li>
+              <li><Link href="/sell-with-us" className="text-secondary-foreground/80 hover:text-primary transition-colors">Become a Seller</Link></li>
               <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Bulk Orders</Link></li>
               <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">Home Delivery</Link></li>
             </ul>
@@ -54,7 +54,7 @@ export default function Footer() {
               <li><Link href="/orders" className="text-secondary-foreground/80 hover:text-primary transition-colors">My Orders</Link></li>
               <li><Link href="/cart" className="text-secondary-foreground/80 hover:text-primary transition-colors">My Cart</Link></li>
               <li><Link href="/login" className="text-secondary-foreground/80 hover:text-primary transition-colors">Login</Link></li>
-              <li><Link href="#" className="text-secondary-foreground/80 hover:text-primary transition-colors">FAQs</Link></li>
+              <li><Link href="/query" className="text-secondary-foreground/80 hover:text-primary transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 

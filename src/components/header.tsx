@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Milk, ShoppingCart, Menu, Search, LogOut, Handshake, User as UserIcon } from 'lucide-react';
+import { Milk, ShoppingCart, Menu, Search, LogOut, Handshake, User as UserIcon, Package, HelpCircle } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -31,13 +31,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/products', label: 'Products' },
+  { href: '/', label: 'Home', icon: null },
+  { href: '/products', label: 'Products', icon: null },
+  { href: '/orders', label: 'Track Order', icon: Package },
+  { href: '/query', label: 'Query', icon: HelpCircle },
 ];
 
 const userNavItems = [
-    { href: '/orders', label: 'My Orders' },
-    { href: '/query', label: 'Query' },
+    // These are now in the main nav
 ];
 
 const sellerNavItems = [
@@ -108,13 +109,14 @@ export default function Header() {
   };
 
   const DesktopNav = () => (
-    <nav className="hidden items-center space-x-2 md:flex">
+    <nav className="hidden items-center space-x-1 md:flex">
       {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={cn(buttonVariants({ size: 'sm', variant: pathname === item.href ? 'secondary' : 'ghost' }))}
         >
+          {item.icon && <item.icon className="mr-2 h-4 w-4"/>}
           {item.label}
         </Link>
       ))}
@@ -136,7 +138,7 @@ export default function Header() {
             <span className="font-logo text-3xl font-bold">ApnaDairy</span>
           </Link>
           <nav className="flex flex-col space-y-2">
-            {[...navItems, ...userNavItems].map((item) => (
+            {navItems.map((item) => (
             <Link
                 key={item.href}
                 href={item.href}
@@ -226,6 +228,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
+          {isMobile && <MobileNav />}
           <Link href="/" className="flex items-center space-x-2">
             <Milk className="h-7 w-7 text-primary" />
             <span className="hidden font-logo text-2xl font-bold sm:inline-block">
@@ -235,11 +238,11 @@ export default function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-center">
-            {!isMobile ? <DesktopNav /> : <SearchBar />}
+            {!isMobile && <DesktopNav />}
         </div>
         
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {!isMobile && <SearchBar />}
+          <SearchBar />
            {profile?.role !== 'seller' && (
               <Button asChild variant="ghost" size="icon" className="transition-colors">
                 <Link href="/cart">
@@ -254,7 +257,6 @@ export default function Header() {
               </Button>
            )}
           <UserNav />
-          {isMobile && <MobileNav />}
         </div>
       </div>
     </header>
