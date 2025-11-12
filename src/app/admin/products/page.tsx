@@ -54,14 +54,14 @@ export default function AdminProductsPage() {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (productId: string, productName: string) => {
+  const handleDelete = async (product: Product) => {
     try {
-      await deleteProduct(productId);
+      const isSellerProduct = !!product.sellerId;
+      await deleteProduct(product.id, isSellerProduct);
       toast({
         title: "Product Deleted",
-        description: `${productName} has been removed from the store.`
+        description: `${product.name} has been removed from the store.`
       });
-      // Refresh the product list
       fetchProducts();
     } catch (error) {
       console.error("Error deleting product: ", error);
@@ -152,7 +152,7 @@ export default function AdminProductsPage() {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(product.id, product.name)}>
+                            <AlertDialogAction onClick={() => handleDelete(product)}>
                               Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>

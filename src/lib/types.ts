@@ -8,6 +8,7 @@ export type Product = {
   defaultUnit: 'litre' | 'ml' | 'kg' | 'g';
   image: string;
   category: string;
+  sellerId?: string; // Optional: To identify products added by sellers
 };
 
 export type CartItem = {

@@ -27,6 +27,37 @@
         "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the seller account was created." }
       },
       "required": ["uid", "fullName", "email", "role", "phone", "createdAt"]
+    },
+     "Product": {
+      "title": "Product",
+      "description": "Represents a product listed on the platform, added by an admin.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "pricePerUnit": { "type": "number" },
+        "units": { "type": "array", "items": { "type": "string", "enum": ["litre", "ml", "kg", "g"] } },
+        "defaultUnit": { "type": "string", "enum": ["litre", "ml", "kg", "g"] },
+        "image": { "type": "string", "format": "uri" },
+        "category": { "type": "string" }
+      },
+      "required": ["name", "pricePerUnit", "units", "defaultUnit", "image", "category"]
+    },
+    "SellerProduct": {
+      "title": "Seller Product",
+      "description": "Represents a product listed by a seller.",
+      "type": "object",
+      "properties": {
+        "sellerId": { "type": "string", "description": "The UID of the seller who owns this product." },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "pricePerUnit": { "type": "number" },
+        "units": { "type": "array", "items": { "type": "string", "enum": ["litre", "ml", "kg", "g"] } },
+        "defaultUnit": { "type": "string", "enum": ["litre", "ml", "kg", "g"] },
+        "image": { "type": "string", "format": "uri" },
+        "category": { "type": "string" }
+      },
+      "required": ["sellerId", "name", "pricePerUnit", "units", "defaultUnit", "image", "category"]
     }
   },
   "auth": {
@@ -40,6 +71,14 @@
     "/sellers/{sellerId}": {
       "schema": { "$ref": "#/entities/SellerProfile" },
       "description": "Stores public profile information for sellers."
+    },
+     "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Stores products added by platform admins."
+    },
+    "/sellerProducts/{productId}": {
+      "schema": { "$ref": "#/entities/SellerProduct" },
+      "description": "Stores products added by individual sellers."
     }
   }
 }

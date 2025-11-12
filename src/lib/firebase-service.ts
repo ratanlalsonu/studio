@@ -1,61 +1,111 @@
 
 import { db, storage } from './firebase';
-import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, query, where } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import type { Product, Order, SellerApplication } from './types';
+import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
+import { ref, deleteObject } from 'firebase/storage';
+import type { Product, Order } from './types';
 import { seedProductData } from './seed-data';
+
+// Type for product data excluding the ID, used for creation
+type ProductData = Omit<Product, 'id'>;
 
 // ==================
 // Product Services
 // ==================
 
 /**
- * Fetches all products from the Firestore 'products' collection.
- * @returns A promise that resolves to an array of products.
+ * Fetches all products from both admin 'products' and 'sellerProducts' collections.
+ * @returns A promise that resolves to a combined array of all products.
  */
 export const getProducts = async (): Promise<Product[]> => {
   const productsCol = collection(db, 'products');
+  const sellerProductsCol = collection(db, 'sellerProducts');
+
   const productSnapshot = await getDocs(productsCol);
+  const sellerProductSnapshot = await getDocs(sellerProductsCol);
+
   const productList = productSnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
   } as Product));
-  return productList;
+
+  const sellerProductList = sellerProductSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  } as Product));
+  
+  return [...productList, ...sellerProductList];
 };
 
 /**
+ * Fetches all products listed by a specific seller.
+ * @param sellerId - The UID of the seller.
+ * @returns A promise that resolves to an array of the seller's products.
+ */
+export const getProductsBySeller = async (sellerId: string): Promise<Product[]> => {
+    const q = query(collection(db, "sellerProducts"), where("sellerId", "==", sellerId));
+    const querySnapshot = await getDocs(q);
+    const productList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+    } as Product));
+    return productList;
+}
+
+/**
  * Fetches a single product by its ID from Firestore.
+ * It checks both 'products' and 'sellerProducts' collections.
  * @param id - The ID of the product to fetch.
  * @returns A promise that resolves to the product object or null if not found.
  */
 export const getProductById = async (id: string): Promise<Product | null> => {
-    const productRef = doc(db, 'products', id);
-    const productSnap = await getDoc(productRef);
-    if(productSnap.exists()) {
+    let productRef = doc(db, 'products', id);
+    let productSnap = await getDoc(productRef);
+
+    if (productSnap.exists()) {
         return { id: productSnap.id, ...productSnap.data() } as Product;
-    } else {
-        return null;
     }
+
+    productRef = doc(db, 'sellerProducts', id);
+    productSnap = await getDoc(productRef);
+
+    if (productSnap.exists()) {
+        return { id: productSnap.id, ...productSnap.data() } as Product;
+    }
+    
+    return null;
 }
 
 /**
- * Adds a new product to Firestore using a direct image URL.
+ * Adds a new product to the 'products' collection (for admins).
  * @param productData - The complete product data, including the image URL.
  * @returns A promise that resolves with the new document's ID.
  */
-export const addProduct = async (productData: Omit<Product, 'id'>): Promise<string> => {
+export const addProduct = async (productData: ProductData): Promise<string> => {
   const productsCol = collection(db, 'products');
   const docRef = await addDoc(productsCol, productData);
   return docRef.id;
 };
 
+/**
+ * Adds a new product to the 'sellerProducts' collection.
+ * @param sellerId - The UID of the seller adding the product.
+ * @param productData - The product data.
+ * @returns A promise that resolves with the new document's ID.
+ */
+export const addProductBySeller = async (sellerId: string, productData: Omit<ProductData, 'sellerId'>): Promise<string> => {
+  const productsCol = collection(db, 'sellerProducts');
+  const docRef = await addDoc(productsCol, { ...productData, sellerId });
+  return docRef.id;
+};
 
 /**
  * Deletes a product from Firestore and its corresponding image from Storage.
  * @param productId - The ID of the product to delete.
+ * @param isSellerProduct - Whether the product is from the 'sellerProducts' collection.
  */
-export const deleteProduct = async (productId: string) => {
-    const productRef = doc(db, 'products', productId);
+export const deleteProduct = async (productId: string, isSellerProduct: boolean = false) => {
+    const collectionName = isSellerProduct ? 'sellerProducts' : 'products';
+    const productRef = doc(db, collectionName, productId);
     const productSnap = await getDoc(productRef);
 
     if (!productSnap.exists()) {
@@ -65,22 +115,17 @@ export const deleteProduct = async (productId: string) => {
     const product = productSnap.data() as Product;
     const imageUrl = product.image;
 
-    // Delete image from Storage only if it's a Firebase Storage URL
     if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
         try {
-            // Create a reference from the full URL
             const imageStorageRef = ref(storage, imageUrl);
             await deleteObject(imageStorageRef);
         } catch (error: any) {
-            // If the image doesn't exist, we can ignore the error
             if (error.code !== 'storage/object-not-found') {
                 console.error("Error deleting image from storage: ", error);
-                // We can still proceed to delete the firestore doc
             }
         }
     }
 
-    // Delete document from Firestore
     await deleteDoc(productRef);
 }
 
@@ -91,18 +136,21 @@ export const deleteProduct = async (productId: string) => {
  */
 export const seedProducts = async (): Promise<number> => {
     const productsCol = collection(db, 'products');
+    const batch = writeBatch(db);
     let productsAddedCount = 0;
 
     for (const product of seedProductData) {
-        // Check if a product with the same name already exists
         const q = query(productsCol, where("name", "==", product.name));
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-            await addDoc(productsCol, product);
+            const newDocRef = doc(productsCol);
+            batch.set(newDocRef, product);
             productsAddedCount++;
         }
     }
+    
+    await batch.commit();
     return productsAddedCount;
 }
 
