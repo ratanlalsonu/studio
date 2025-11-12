@@ -5,6 +5,7 @@ import { CartProvider } from '@/context/cart-context';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Chatbot from '@/components/chatbot';
+import { FirebaseProvider } from '@/firebase/provider';
 
 export const metadata: Metadata = {
   title: 'ApnaDairy Online',
@@ -24,15 +25,17 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <CartProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-          <Chatbot />
-          <Toaster />
-        </CartProvider>
+        <FirebaseProvider>
+          <CartProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </div>
+            <Chatbot />
+            <Toaster />
+          </CartProvider>
+        </FirebaseProvider>
       </body>
     </html>
   );

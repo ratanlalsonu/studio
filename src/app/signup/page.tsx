@@ -3,49 +3,73 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Milk, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { signUpUser } from '@/firebase/auth/authService';
+
+const signupSchema = z
+  .object({
+    fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
+    email: z.string().email({ message: 'Invalid email address.' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters.' })
+      .regex(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, {
+        message: 'Password must contain at least one number, one uppercase and one lowercase letter.',
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = async (data: SignupFormValues) => {
+    setIsLoading(true);
+    try {
+      await signUpUser(data.email, data.password, { fullName: data.fullName, email: data.email });
+      toast({
+        title: 'Account Created!',
+        description: 'You have successfully created an account. Please login.',
+      });
+      router.push('/login');
+    } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Passwords do not match',
-        description: 'Please make sure your passwords match.',
+        title: 'Signup Failed',
+        description: error.message || 'An unknown error occurred.',
       });
-      return;
+    } finally {
+      setIsLoading(false);
     }
-    // In a real app, you would handle user registration here.
-    console.log('Signing up with:', { fullName, email, password });
-    toast({
-        title: 'Account Created!',
-        description: "You have successfully created an account. Please login.",
-    });
-    router.push('/login');
   };
-
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center bg-background">
@@ -53,85 +77,90 @@ export default function SignupPage() {
         <CardHeader className="text-center">
           <Milk className="mx-auto h-12 w-12 text-primary" />
           <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
-          <CardDescription>
-            Enter your information to create an account with ApnaDairy
-          </CardDescription>
+          <CardDescription>Enter your information to create an account with ApnaDairy</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-                <Label htmlFor="full-name">Full Name</Label>
-                <Input 
-                  id="full-name" 
-                  placeholder="Max Robinson" 
-                  required 
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Max Robinson" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? 'text' : 'password'} 
-                  required 
-                  minLength={8}
-                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                  title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <Button 
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                  onClick={() => setShowPassword(prev => !prev)}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
-                </Button>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-               <div className="relative">
-                <Input 
-                  id="confirm-password" 
-                  type={showConfirmPassword ? 'text' : 'password'} 
-                  required 
-                  minLength={8}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                 <Button 
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                  onClick={() => setShowConfirmPassword(prev => !prev)}
-                >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  <span className="sr-only">{showConfirmPassword ? 'Hide password' : 'Show password'}</span>
-                </Button>
-              </div>
-            </div>
-            <Button type="submit" className="w-full">
-              Create an account
-            </Button>
-          </form>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="m@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input type={showPassword ? 'text' : 'password'} {...field} />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                          onClick={() => setShowPassword(prev => !prev)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input type={showConfirmPassword ? 'text' : 'password'} {...field} />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                          onClick={() => setShowConfirmPassword(prev => !prev)}
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Creating Account...' : 'Create an account'}
+              </Button>
+            </form>
+          </Form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
             <Link href="/login" className="underline">

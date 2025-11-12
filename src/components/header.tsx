@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Milk, ShoppingCart, Menu, Search } from 'lucide-react';
+import { Milk, ShoppingCart, Menu, Search, LogOut } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/cart-context';
@@ -17,7 +17,17 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-
+import { useUser } from '@/firebase/auth/use-user';
+import { signOutUser } from '@/firebase/auth/authService';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -32,9 +42,21 @@ export default function Header() {
   const isMobile = useIsMobile();
   const [showSearch, setShowSearch] = useState(false);
   const { toast } = useToast();
+  const { user, isLoading } = useUser();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
+      router.push('/');
+      router.refresh();
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Logout Failed', description: error.message });
+    }
+  };
 
   const SearchBar = () => {
-    const router = useRouter();
     const searchParams = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
 
@@ -76,7 +98,6 @@ export default function Header() {
     );
   };
 
-
   const DesktopNav = () => (
     <nav className="hidden items-center space-x-2 md:flex">
       {navItems.map((item) => (
@@ -101,11 +122,11 @@ export default function Header() {
       </SheetTrigger>
       <SheetContent side="left">
         <div className="flex flex-col space-y-4 p-4">
-        <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Milk className="h-8 w-8 text-primary" />
             <span className="font-logo text-3xl font-bold">ApnaDairy</span>
-        </Link>
-        <nav className="flex flex-col space-y-2">
+          </Link>
+          <nav className="flex flex-col space-y-2">
             {navItems.map((item) => (
             <Link
                 key={item.href}
@@ -115,11 +136,57 @@ export default function Header() {
                 {item.label}
             </Link>
             ))}
-        </nav>
+          </nav>
         </div>
       </SheetContent>
     </Sheet>
   );
+
+  const UserNav = () => {
+    if (isLoading) {
+        return <div className="h-10 w-24 animate-pulse rounded-md bg-muted" />;
+    }
+    
+    if (user) {
+      const fallbackName = user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U';
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                <AvatarFallback>{fallbackName}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <>
+        <Button asChild variant="outline" size="sm" className="transition-colors">
+          <Link href="/login">Login</Link>
+        </Button>
+        <Button asChild size="sm" className="transition-transform duration-200 hover:scale-105">
+          <Link href="/signup">Sign Up</Link>
+        </Button>
+      </>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -150,12 +217,7 @@ export default function Header() {
               <span className="sr-only">Shopping Cart</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="transition-colors">
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button asChild size="sm" className="transition-transform duration-200 hover:scale-105">
-            <Link href="/signup">Sign Up</Link>
-          </Button>
+          <UserNav />
           {isMobile && <MobileNav />}
         </div>
       </div>
