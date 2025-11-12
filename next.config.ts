@@ -10,14 +10,13 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'img.freepik.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
+      { protocol: 'https', hostname: 'www.thefrozengarden.com' },
+      { protocol: 'https', hostname: 'tiimg.tistatic.com' },
+      { protocol: 'https', hostname: 'media.istockphoto.com' },
+      { protocol: 'https', hostname: 't3.ftcdn.net' },
+      { protocol: 'https', hostname: 'www.shutterstock.com' },
     ],
   },
 };
