@@ -3,8 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { LayoutDashboard, ShoppingCart, Users, Package, BarChart, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -29,20 +27,18 @@ export default function AdminLayout({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuthenticated(true);
-      } else {
-        router.push('/admin/login');
-      }
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
+    const isAdmin = sessionStorage.getItem('admin-authenticated') === 'true';
+    if (!isAdmin) {
+      router.push('/');
+    } else {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
   }, [router]);
 
-  const handleLogout = async () => {
-    await auth.signOut();
-    router.push('/admin/login');
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin-authenticated');
+    router.push('/');
   };
 
   if (isLoading) {
